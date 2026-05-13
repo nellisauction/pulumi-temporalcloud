@@ -1,6 +1,6 @@
 {
     "name": "@nellisauction/pulumi-temporalcloud",
-    "version": "0.0.0",
+    "version": "0.0.0-check",
     "description": "A Pulumi package for managing Temporal Cloud resources.",
     "keywords": [
         "pulumi",
@@ -8,10 +8,7 @@
         "category/infrastructure"
     ],
     "homepage": "https://github.com/nellisauction/pulumi-temporalcloud",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/nellisauction/pulumi-temporalcloud.git"
-    },
+    "repository": "https://github.com/nellisauction/pulumi-temporalcloud",
     "license": "Apache-2.0",
     "scripts": {
         "build": "tsc"
@@ -26,7 +23,7 @@
     "pulumi": {
         "resource": true,
         "name": "temporalcloud",
-        "version": "0.0.0",
+        "version": "0.0.0-check",
         "server": "github://api.github.com/nellisauction/pulumi-temporalcloud"
     }
 }

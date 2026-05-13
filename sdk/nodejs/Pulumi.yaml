@@ -1,0 +1,3 @@
+name: temporalcloud
+description: A Pulumi resource provider for temporalcloud.
+language: nodejs
