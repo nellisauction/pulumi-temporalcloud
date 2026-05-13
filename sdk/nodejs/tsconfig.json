@@ -1,0 +1,57 @@
+{
+    "compilerOptions": {
+        // Output
+        "outDir": "bin",
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "stripInternal": true,
+        // Environment
+        "target": "ES2022",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "moduleDetection": "force",
+        "types": ["node"],
+        // Type Checking
+        "strict": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "skipLibCheck": true
+    },
+    "files": [
+        "accountAuditLogSink.ts",
+        "apikey.ts",
+        "config/index.ts",
+        "config/vars.ts",
+        "connectivityRule.ts",
+        "getAccountAuditLogSink.ts",
+        "getConnectivityRule.ts",
+        "getNamespace.ts",
+        "getNamespaces.ts",
+        "getNexusEndpoint.ts",
+        "getNexusEndpoints.ts",
+        "getRegions.ts",
+        "getScimGroup.ts",
+        "getServiceAccount.ts",
+        "getServiceAccounts.ts",
+        "getUser.ts",
+        "getUsers.ts",
+        "group.ts",
+        "groupAccess.ts",
+        "groupMembers.ts",
+        "index.ts",
+        "metricsEndpoint.ts",
+        "namespace.ts",
+        "namespaceExportSink.ts",
+        "namespaceSearchAttribute.ts",
+        "namespaceTags.ts",
+        "nexusEndpoint.ts",
+        "provider.ts",
+        "serviceAccount.ts",
+        "types/index.ts",
+        "types/input.ts",
+        "types/output.ts",
+        "user.ts",
+        "utilities.ts"
+    ]
+}
