@@ -1,0 +1,4 @@
+[submodule "upstream"]
+	path = upstream
+	url = https://github.com/temporalio/terraform-provider-temporalcloud.git
+	ignore = dirty

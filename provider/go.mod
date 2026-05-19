@@ -4,6 +4,7 @@ go 1.25.9
 
 replace (
 	github.com/hashicorp/terraform-plugin-sdk/v2 => github.com/pulumi/terraform-plugin-sdk/v2 v2.0.0-20260318212141-5525259d096b
+	github.com/temporalio/terraform-provider-temporalcloud => ../upstream
 	github.com/temporalio/terraform-provider-temporalcloud/shim => ./shim
 )
 
@@ -224,7 +225,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.43.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.10.0 // indirect
 	go.temporal.io/api v1.53.0 // indirect
-	go.temporal.io/cloud-sdk v0.7.0 // indirect
+	go.temporal.io/cloud-sdk v0.10.0 // indirect
 	go.temporal.io/sdk v1.36.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
