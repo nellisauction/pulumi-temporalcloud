@@ -8,17 +8,28 @@ PROVIDER := pulumi-resource-$(PACK)
 TESTPARALLELISM := 10
 WORKING_DIR := $(shell pwd)
 
-ifndef PROVIDER_VERSION
-$(error PROVIDER_VERSION must be set explicitly)
-endif
+# Override during CI using `make [TARGET] PROVIDER_VERSION=x.y.z` or by setting
+# a PROVIDER_VERSION environment variable. Local builds use this default.
+PROVIDER_VERSION ?= 0.0.0-dev
 
 LDFLAGS_STRIP_SYMBOLS=-s -w
 LDFLAGS_PROJ_VERSION=-X $(PROJECT)/$(VERSION_PATH)=$(PROVIDER_VERSION)
 LDFLAGS=$(LDFLAGS_PROJ_VERSION) $(LDFLAGS_STRIP_SYMBOLS)
 
+_ := $(shell mkdir -p .make)
+
 build: provider build_sdks
 
 generate: schema generate_sdks
+
+prepare_local_workspace: upstream
+.PHONY: prepare_local_workspace
+
+upstream: .make/upstream
+.make/upstream: $(wildcard patches/*) $(shell ./scripts/upstream.sh file_target)
+	./scripts/upstream.sh init
+	@touch $@
+.PHONY: upstream
 
 provider: bin/$(PROVIDER)
 

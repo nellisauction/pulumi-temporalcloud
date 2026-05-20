@@ -10,12 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: true
       - uses: actions/setup-go@v6
         with:
           go-version: '1.25'
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
+      - name: Apply upstream patches
+        run: make upstream
       - name: Build Provider
         run: |
           cd provider && go mod tidy && cd ..
