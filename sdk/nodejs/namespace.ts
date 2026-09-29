@@ -79,9 +79,17 @@ export class Namespace extends pulumi.CustomResource {
      */
     declare public readonly connectivityRuleIds: pulumi.Output<string[] | undefined>;
     /**
+     * The description of the namespace. Optional. Must be at most 255 printable ASCII characters plus whitespace. An empty string clears the description.
+     */
+    declare public readonly description: pulumi.Output<string>;
+    /**
      * The endpoints for the namespace.
      */
     declare public /*out*/ readonly endpoints: pulumi.Output<outputs.NamespaceEndpoints>;
+    /**
+     * The fairness configuration for the namespace.
+     */
+    declare public readonly fairness: pulumi.Output<outputs.NamespaceFairness | undefined>;
     /**
      * The name of the namespace. Must be 2-64 characters, start with a letter, contain only lowercase letters, numbers, and hyphens, and not end with a hyphen.
      */
@@ -119,7 +127,9 @@ export class Namespace extends pulumi.CustomResource {
             resourceInputs["certificateFilters"] = state?.certificateFilters;
             resourceInputs["codecServer"] = state?.codecServer;
             resourceInputs["connectivityRuleIds"] = state?.connectivityRuleIds;
+            resourceInputs["description"] = state?.description;
             resourceInputs["endpoints"] = state?.endpoints;
+            resourceInputs["fairness"] = state?.fairness;
             resourceInputs["name"] = state?.name;
             resourceInputs["namespaceLifecycle"] = state?.namespaceLifecycle;
             resourceInputs["regions"] = state?.regions;
@@ -139,6 +149,8 @@ export class Namespace extends pulumi.CustomResource {
             resourceInputs["certificateFilters"] = args?.certificateFilters;
             resourceInputs["codecServer"] = args?.codecServer;
             resourceInputs["connectivityRuleIds"] = args?.connectivityRuleIds;
+            resourceInputs["description"] = args?.description;
+            resourceInputs["fairness"] = args?.fairness;
             resourceInputs["name"] = args?.name;
             resourceInputs["namespaceLifecycle"] = args?.namespaceLifecycle;
             resourceInputs["regions"] = args?.regions;
@@ -180,9 +192,17 @@ export interface NamespaceState {
      */
     connectivityRuleIds?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
+     * The description of the namespace. Optional. Must be at most 255 printable ASCII characters plus whitespace. An empty string clears the description.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
      * The endpoints for the namespace.
      */
     endpoints?: pulumi.Input<inputs.NamespaceEndpoints | undefined>;
+    /**
+     * The fairness configuration for the namespace.
+     */
+    fairness?: pulumi.Input<inputs.NamespaceFairness | undefined>;
     /**
      * The name of the namespace. Must be 2-64 characters, start with a letter, contain only lowercase letters, numbers, and hyphens, and not end with a hyphen.
      */
@@ -230,6 +250,14 @@ export interface NamespaceArgs {
      * The IDs of the connectivity rules for this namespace.
      */
     connectivityRuleIds?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * The description of the namespace. Optional. Must be at most 255 printable ASCII characters plus whitespace. An empty string clears the description.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * The fairness configuration for the namespace.
+     */
+    fairness?: pulumi.Input<inputs.NamespaceFairness | undefined>;
     /**
      * The name of the namespace. Must be 2-64 characters, start with a letter, contain only lowercase letters, numbers, and hyphens, and not end with a hyphen.
      */

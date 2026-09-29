@@ -37,6 +37,7 @@ func Provider() tfbridge.ProviderInfo {
 		Homepage:          "https://github.com/nellisauction/pulumi-temporalcloud",
 		Repository:        "https://github.com/nellisauction/pulumi-temporalcloud",
 		GitHubOrg:         "temporalio",
+		UpstreamRepoPath:  "./upstream",
 		Config: map[string]*tfbridge.SchemaInfo{
 			"api_key": {
 				Default: &tfbridge.DefaultInfo{

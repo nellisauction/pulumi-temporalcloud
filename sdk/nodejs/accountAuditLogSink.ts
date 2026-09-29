@@ -20,7 +20,7 @@ import * as utilities from "./utilities";
  *     sinkName: "my-kinesis-sink",
  *     enabled: true,
  *     kinesis: {
- *         roleName: "arn:aws:iam::123456789012:role/TemporalCloudKinesisRole",
+ *         roleName: "TemporalCloudKinesisRole",
  *         destinationUri: "arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream",
  *         region: "us-east-1",
  *     },

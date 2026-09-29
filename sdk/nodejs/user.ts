@@ -51,9 +51,13 @@ export class User extends pulumi.CustomResource {
     }
 
     /**
-     * The role on the account. Must be one of `owner`, `admin`, `developer`, `read`, `financeadmin`, or `metricsread` (case-insensitive). `owner` is only valid for import and cannot be created, updated or deleted without Temporal support. `none` is only valid for users managed via SCIM that derive their roles from group memberships.
+     * The role on the account. Must be one of `owner`, `admin`, `developer`, `read`, `financeadmin`, or `none` (case-insensitive). `owner` is only valid for import and cannot be created, updated or deleted without Temporal support. Users can only be set to `none` when they are managed by SCIM and derive their roles from group memberships.
      */
     declare public readonly accountAccess: pulumi.Output<string>;
+    /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.
+     */
+    declare public readonly accountAccessCustomRoles: pulumi.Output<string[] | undefined>;
     /**
      * The email address for the user.
      */
@@ -82,6 +86,7 @@ export class User extends pulumi.CustomResource {
         if (opts.id) {
             const state = argsOrState as UserState | undefined;
             resourceInputs["accountAccess"] = state?.accountAccess;
+            resourceInputs["accountAccessCustomRoles"] = state?.accountAccessCustomRoles;
             resourceInputs["email"] = state?.email;
             resourceInputs["namespaceAccesses"] = state?.namespaceAccesses;
             resourceInputs["state"] = state?.state;
@@ -95,6 +100,7 @@ export class User extends pulumi.CustomResource {
                 throw new Error("Missing required property 'email'");
             }
             resourceInputs["accountAccess"] = args?.accountAccess;
+            resourceInputs["accountAccessCustomRoles"] = args?.accountAccessCustomRoles;
             resourceInputs["email"] = args?.email;
             resourceInputs["namespaceAccesses"] = args?.namespaceAccesses;
             resourceInputs["timeouts"] = args?.timeouts;
@@ -110,9 +116,13 @@ export class User extends pulumi.CustomResource {
  */
 export interface UserState {
     /**
-     * The role on the account. Must be one of `owner`, `admin`, `developer`, `read`, `financeadmin`, or `metricsread` (case-insensitive). `owner` is only valid for import and cannot be created, updated or deleted without Temporal support. `none` is only valid for users managed via SCIM that derive their roles from group memberships.
+     * The role on the account. Must be one of `owner`, `admin`, `developer`, `read`, `financeadmin`, or `none` (case-insensitive). `owner` is only valid for import and cannot be created, updated or deleted without Temporal support. Users can only be set to `none` when they are managed by SCIM and derive their roles from group memberships.
      */
     accountAccess?: pulumi.Input<string | undefined>;
+    /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.
+     */
+    accountAccessCustomRoles?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * The email address for the user.
      */
@@ -133,9 +143,13 @@ export interface UserState {
  */
 export interface UserArgs {
     /**
-     * The role on the account. Must be one of `owner`, `admin`, `developer`, `read`, `financeadmin`, or `metricsread` (case-insensitive). `owner` is only valid for import and cannot be created, updated or deleted without Temporal support. `none` is only valid for users managed via SCIM that derive their roles from group memberships.
+     * The role on the account. Must be one of `owner`, `admin`, `developer`, `read`, `financeadmin`, or `none` (case-insensitive). `owner` is only valid for import and cannot be created, updated or deleted without Temporal support. Users can only be set to `none` when they are managed by SCIM and derive their roles from group memberships.
      */
     accountAccess: pulumi.Input<string>;
+    /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.
+     */
+    accountAccessCustomRoles?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * The email address for the user.
      */

@@ -17,6 +17,11 @@ import * as utilities from "./utilities";
  *
  * // Create Public Connectivity Rule
  * const publicRule = new temporalcloud.ConnectivityRule("public_rule", {connectivityType: "public"});
+ * // Create Public Connectivity Rule with stable IPs enabled
+ * const publicRuleStableIps = new temporalcloud.ConnectivityRule("public_rule_stable_ips", {
+ *     connectivityType: "public",
+ *     enableStableIps: true,
+ * });
  * // Create Private Connectivity Rule for AWS
  * const privateAws = new temporalcloud.ConnectivityRule("private_aws", {
  *     connectivityType: "private",
@@ -29,6 +34,12 @@ import * as utilities from "./utilities";
  *     connectionId: "vpce-12345678",
  *     region: "gcp-us-central1",
  *     gcpProjectId: "my-gcp-project-id",
+ * });
+ * // Create Private Connectivity Rule for Azure
+ * const privateAzure = new temporalcloud.ConnectivityRule("private_azure", {
+ *     connectivityType: "private",
+ *     region: "azure-centralus",
+ *     azurePeResourceId: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.Network/privateEndpoints/my-pe",
  * });
  * // Attaching connectivity rules to a namespace
  * const ns_with_cr = new temporalcloud.Namespace("ns-with-cr", {
@@ -72,19 +83,27 @@ export class ConnectivityRule extends pulumi.CustomResource {
     }
 
     /**
-     * The connection ID of the private connection.
+     * The ARM resource ID of the customer's Azure Private Endpoint. Required when region starts with 'azure'. Example: '/subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.Network/privateEndpoints/{name}'.
      */
-    declare public readonly connectionId: pulumi.Output<string | undefined>;
+    declare public readonly azurePeResourceId: pulumi.Output<string | undefined>;
+    /**
+     * The connection ID of the private connection. Not applicable for Azure, where this is populated automatically after the Private Endpoint connection is approved.
+     */
+    declare public readonly connectionId: pulumi.Output<string>;
     /**
      * The type of connectivity. Must be one of 'public' or 'private'.
      */
     declare public readonly connectivityType: pulumi.Output<string>;
     /**
-     * The GCP project ID. Required when cloudProvider is 'gcp'.
+     * If true, namespaces attached to this public connectivity rule will be reachable via a predictable set of public IPs. Only applies when connectivityType is 'public'.
+     */
+    declare public readonly enableStableIps: pulumi.Output<boolean>;
+    /**
+     * The GCP project ID. Required when region is 'gcp'.
      */
     declare public readonly gcpProjectId: pulumi.Output<string | undefined>;
     /**
-     * The region of the connection. Example: 'aws-us-west-2'.
+     * The region of the connection. Example: 'aws-us-west-2', 'gcp-us-central1', 'azure-centralus'.
      */
     declare public readonly region: pulumi.Output<string | undefined>;
     declare public readonly timeouts: pulumi.Output<outputs.ConnectivityRuleTimeouts | undefined>;
@@ -102,8 +121,10 @@ export class ConnectivityRule extends pulumi.CustomResource {
         opts = opts || {};
         if (opts.id) {
             const state = argsOrState as ConnectivityRuleState | undefined;
+            resourceInputs["azurePeResourceId"] = state?.azurePeResourceId;
             resourceInputs["connectionId"] = state?.connectionId;
             resourceInputs["connectivityType"] = state?.connectivityType;
+            resourceInputs["enableStableIps"] = state?.enableStableIps;
             resourceInputs["gcpProjectId"] = state?.gcpProjectId;
             resourceInputs["region"] = state?.region;
             resourceInputs["timeouts"] = state?.timeouts;
@@ -112,8 +133,10 @@ export class ConnectivityRule extends pulumi.CustomResource {
             if (args?.connectivityType === undefined && !opts.urn) {
                 throw new Error("Missing required property 'connectivityType'");
             }
+            resourceInputs["azurePeResourceId"] = args?.azurePeResourceId;
             resourceInputs["connectionId"] = args?.connectionId;
             resourceInputs["connectivityType"] = args?.connectivityType;
+            resourceInputs["enableStableIps"] = args?.enableStableIps;
             resourceInputs["gcpProjectId"] = args?.gcpProjectId;
             resourceInputs["region"] = args?.region;
             resourceInputs["timeouts"] = args?.timeouts;
@@ -128,7 +151,11 @@ export class ConnectivityRule extends pulumi.CustomResource {
  */
 export interface ConnectivityRuleState {
     /**
-     * The connection ID of the private connection.
+     * The ARM resource ID of the customer's Azure Private Endpoint. Required when region starts with 'azure'. Example: '/subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.Network/privateEndpoints/{name}'.
+     */
+    azurePeResourceId?: pulumi.Input<string | undefined>;
+    /**
+     * The connection ID of the private connection. Not applicable for Azure, where this is populated automatically after the Private Endpoint connection is approved.
      */
     connectionId?: pulumi.Input<string | undefined>;
     /**
@@ -136,11 +163,15 @@ export interface ConnectivityRuleState {
      */
     connectivityType?: pulumi.Input<string | undefined>;
     /**
-     * The GCP project ID. Required when cloudProvider is 'gcp'.
+     * If true, namespaces attached to this public connectivity rule will be reachable via a predictable set of public IPs. Only applies when connectivityType is 'public'.
+     */
+    enableStableIps?: pulumi.Input<boolean | undefined>;
+    /**
+     * The GCP project ID. Required when region is 'gcp'.
      */
     gcpProjectId?: pulumi.Input<string | undefined>;
     /**
-     * The region of the connection. Example: 'aws-us-west-2'.
+     * The region of the connection. Example: 'aws-us-west-2', 'gcp-us-central1', 'azure-centralus'.
      */
     region?: pulumi.Input<string | undefined>;
     timeouts?: pulumi.Input<inputs.ConnectivityRuleTimeouts | undefined>;
@@ -151,7 +182,11 @@ export interface ConnectivityRuleState {
  */
 export interface ConnectivityRuleArgs {
     /**
-     * The connection ID of the private connection.
+     * The ARM resource ID of the customer's Azure Private Endpoint. Required when region starts with 'azure'. Example: '/subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.Network/privateEndpoints/{name}'.
+     */
+    azurePeResourceId?: pulumi.Input<string | undefined>;
+    /**
+     * The connection ID of the private connection. Not applicable for Azure, where this is populated automatically after the Private Endpoint connection is approved.
      */
     connectionId?: pulumi.Input<string | undefined>;
     /**
@@ -159,11 +194,15 @@ export interface ConnectivityRuleArgs {
      */
     connectivityType: pulumi.Input<string>;
     /**
-     * The GCP project ID. Required when cloudProvider is 'gcp'.
+     * If true, namespaces attached to this public connectivity rule will be reachable via a predictable set of public IPs. Only applies when connectivityType is 'public'.
+     */
+    enableStableIps?: pulumi.Input<boolean | undefined>;
+    /**
+     * The GCP project ID. Required when region is 'gcp'.
      */
     gcpProjectId?: pulumi.Input<string | undefined>;
     /**
-     * The region of the connection. Example: 'aws-us-west-2'.
+     * The region of the connection. Example: 'aws-us-west-2', 'gcp-us-central1', 'azure-centralus'.
      */
     region?: pulumi.Input<string | undefined>;
     timeouts?: pulumi.Input<inputs.ConnectivityRuleTimeouts | undefined>;

@@ -10,12 +10,37 @@
             "temporalcloud_connectivity_rule": {
                 "current": "temporalcloud:index/connectivityRule:ConnectivityRule"
             },
+            "temporalcloud_custom_role": {
+                "current": "temporalcloud:index/customRole:CustomRole",
+                "fields": {
+                    "permissions": {
+                        "maxItemsOne": false,
+                        "elem": {
+                            "fields": {
+                                "actions": {
+                                    "maxItemsOne": false
+                                },
+                                "resources": {
+                                    "fields": {
+                                        "resource_ids": {
+                                            "maxItemsOne": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "temporalcloud_group": {
                 "current": "temporalcloud:index/group:Group"
             },
             "temporalcloud_group_access": {
                 "current": "temporalcloud:index/groupAccess:GroupAccess",
                 "fields": {
+                    "account_access_custom_roles": {
+                        "maxItemsOne": false
+                    },
                     "namespace_accesses": {
                         "maxItemsOne": false
                     }
@@ -63,9 +88,15 @@
                     }
                 }
             },
+            "temporalcloud_project": {
+                "current": "temporalcloud:index/project:Project"
+            },
             "temporalcloud_service_account": {
                 "current": "temporalcloud:index/serviceAccount:ServiceAccount",
                 "fields": {
+                    "account_access_custom_roles": {
+                        "maxItemsOne": false
+                    },
                     "namespace_accesses": {
                         "maxItemsOne": false
                     }
@@ -74,6 +105,9 @@
             "temporalcloud_user": {
                 "current": "temporalcloud:index/user:User",
                 "fields": {
+                    "account_access_custom_roles": {
+                        "maxItemsOne": false
+                    },
                     "namespace_accesses": {
                         "maxItemsOne": false
                     }
@@ -193,6 +227,9 @@
             "temporalcloud_service_account": {
                 "current": "temporalcloud:index/getServiceAccount:getServiceAccount",
                 "fields": {
+                    "account_access_custom_roles": {
+                        "maxItemsOne": false
+                    },
                     "namespace_accesses": {
                         "maxItemsOne": false
                     }
@@ -205,6 +242,9 @@
                         "maxItemsOne": false,
                         "elem": {
                             "fields": {
+                                "account_access_custom_roles": {
+                                    "maxItemsOne": false
+                                },
                                 "namespace_accesses": {
                                     "maxItemsOne": false
                                 }
@@ -216,6 +256,9 @@
             "temporalcloud_user": {
                 "current": "temporalcloud:index/getUser:getUser",
                 "fields": {
+                    "account_access_custom_roles": {
+                        "maxItemsOne": false
+                    },
                     "namespace_accesses": {
                         "maxItemsOne": false
                     }
@@ -228,6 +271,9 @@
                         "maxItemsOne": false,
                         "elem": {
                             "fields": {
+                                "account_access_custom_roles": {
+                                    "maxItemsOne": false
+                                },
                                 "namespace_accesses": {
                                     "maxItemsOne": false
                                 }

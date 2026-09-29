@@ -29,6 +29,10 @@ export interface GetConnectivityRuleArgs {
  */
 export interface GetConnectivityRuleResult {
     /**
+     * The ARM resource ID of the customer's Azure Private Endpoint for the connectivity rule.
+     */
+    readonly azurePeResourceId: string;
+    /**
      * The ID of the connection to the connectivity rule.
      */
     readonly connectionId: string;
@@ -40,6 +44,10 @@ export interface GetConnectivityRuleResult {
      * The time the connectivity rule was created.
      */
     readonly createdAt: string;
+    /**
+     * If true, namespaces attached to this public connectivity rule are reachable via a predictable set of public IPs. Only set for public connectivity rules.
+     */
+    readonly enableStableIps: boolean;
     /**
      * The GCP project ID of the connectivity rule.
      */

@@ -51,9 +51,13 @@ export class ServiceAccount extends pulumi.CustomResource {
     }
 
     /**
-     * The role on the account. Must be one of admin, developer, read, or metricsread (case-insensitive). Cannot be set if namespace*scoped*access is provided.
+     * The role on the account. Must be one of `admin`, `developer`, `read`, `financeadmin`, or `metricsread` (case-insensitive). Cannot be set if namespace*scoped*access is provided.
      */
     declare public readonly accountAccess: pulumi.Output<string | undefined>;
+    /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead. Cannot be set if namespace*scoped*access is provided.
+     */
+    declare public readonly accountAccessCustomRoles: pulumi.Output<string[] | undefined>;
     /**
      * The description for the service account.
      */
@@ -67,7 +71,7 @@ export class ServiceAccount extends pulumi.CustomResource {
      */
     declare public readonly namespaceAccesses: pulumi.Output<outputs.ServiceAccountNamespaceAccess[] | undefined>;
     /**
-     * Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access or namespace*accesses are provided.
+     * Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access, account*access*custom*roles, or namespace*accesses are provided.
      */
     declare public readonly namespaceScopedAccess: pulumi.Output<outputs.ServiceAccountNamespaceScopedAccess | undefined>;
     /**
@@ -90,6 +94,7 @@ export class ServiceAccount extends pulumi.CustomResource {
         if (opts.id) {
             const state = argsOrState as ServiceAccountState | undefined;
             resourceInputs["accountAccess"] = state?.accountAccess;
+            resourceInputs["accountAccessCustomRoles"] = state?.accountAccessCustomRoles;
             resourceInputs["description"] = state?.description;
             resourceInputs["name"] = state?.name;
             resourceInputs["namespaceAccesses"] = state?.namespaceAccesses;
@@ -99,6 +104,7 @@ export class ServiceAccount extends pulumi.CustomResource {
         } else {
             const args = argsOrState as ServiceAccountArgs | undefined;
             resourceInputs["accountAccess"] = args?.accountAccess;
+            resourceInputs["accountAccessCustomRoles"] = args?.accountAccessCustomRoles;
             resourceInputs["description"] = args?.description;
             resourceInputs["name"] = args?.name;
             resourceInputs["namespaceAccesses"] = args?.namespaceAccesses;
@@ -116,9 +122,13 @@ export class ServiceAccount extends pulumi.CustomResource {
  */
 export interface ServiceAccountState {
     /**
-     * The role on the account. Must be one of admin, developer, read, or metricsread (case-insensitive). Cannot be set if namespace*scoped*access is provided.
+     * The role on the account. Must be one of `admin`, `developer`, `read`, `financeadmin`, or `metricsread` (case-insensitive). Cannot be set if namespace*scoped*access is provided.
      */
     accountAccess?: pulumi.Input<string | undefined>;
+    /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead. Cannot be set if namespace*scoped*access is provided.
+     */
+    accountAccessCustomRoles?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * The description for the service account.
      */
@@ -132,7 +142,7 @@ export interface ServiceAccountState {
      */
     namespaceAccesses?: pulumi.Input<pulumi.Input<inputs.ServiceAccountNamespaceAccess>[] | undefined>;
     /**
-     * Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access or namespace*accesses are provided.
+     * Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access, account*access*custom*roles, or namespace*accesses are provided.
      */
     namespaceScopedAccess?: pulumi.Input<inputs.ServiceAccountNamespaceScopedAccess | undefined>;
     /**
@@ -147,9 +157,13 @@ export interface ServiceAccountState {
  */
 export interface ServiceAccountArgs {
     /**
-     * The role on the account. Must be one of admin, developer, read, or metricsread (case-insensitive). Cannot be set if namespace*scoped*access is provided.
+     * The role on the account. Must be one of `admin`, `developer`, `read`, `financeadmin`, or `metricsread` (case-insensitive). Cannot be set if namespace*scoped*access is provided.
      */
     accountAccess?: pulumi.Input<string | undefined>;
+    /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead. Cannot be set if namespace*scoped*access is provided.
+     */
+    accountAccessCustomRoles?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * The description for the service account.
      */
@@ -163,7 +177,7 @@ export interface ServiceAccountArgs {
      */
     namespaceAccesses?: pulumi.Input<pulumi.Input<inputs.ServiceAccountNamespaceAccess>[] | undefined>;
     /**
-     * Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access or namespace*accesses are provided.
+     * Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access, account*access*custom*roles, or namespace*accesses are provided.
      */
     namespaceScopedAccess?: pulumi.Input<inputs.ServiceAccountNamespaceScopedAccess | undefined>;
     timeouts?: pulumi.Input<inputs.ServiceAccountTimeouts | undefined>;

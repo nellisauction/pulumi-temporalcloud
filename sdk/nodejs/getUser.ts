@@ -40,6 +40,10 @@ export interface GetUserResult {
      */
     readonly accountAccess: string;
     /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.
+     */
+    readonly accountAccessCustomRoles: string[];
+    /**
      * The creation time of the User.
      */
     readonly createdAt: string;
