@@ -38,6 +38,10 @@ export class NamespaceExportSink extends pulumi.CustomResource {
     }
 
     /**
+     * The Azure Blob configuration details when destination*type is Azure Blob.
+     */
+    declare public readonly azureBlob: pulumi.Output<outputs.NamespaceExportSinkAzureBlob | undefined>;
+    /**
      * A flag indicating whether the export sink is enabled or not.
      */
     declare public readonly enabled: pulumi.Output<boolean>;
@@ -72,6 +76,7 @@ export class NamespaceExportSink extends pulumi.CustomResource {
         opts = opts || {};
         if (opts.id) {
             const state = argsOrState as NamespaceExportSinkState | undefined;
+            resourceInputs["azureBlob"] = state?.azureBlob;
             resourceInputs["enabled"] = state?.enabled;
             resourceInputs["gcs"] = state?.gcs;
             resourceInputs["namespace"] = state?.namespace;
@@ -86,6 +91,7 @@ export class NamespaceExportSink extends pulumi.CustomResource {
             if (args?.sinkName === undefined && !opts.urn) {
                 throw new Error("Missing required property 'sinkName'");
             }
+            resourceInputs["azureBlob"] = args?.azureBlob;
             resourceInputs["enabled"] = args?.enabled;
             resourceInputs["gcs"] = args?.gcs;
             resourceInputs["namespace"] = args?.namespace;
@@ -102,6 +108,10 @@ export class NamespaceExportSink extends pulumi.CustomResource {
  * Input properties used for looking up and filtering NamespaceExportSink resources.
  */
 export interface NamespaceExportSinkState {
+    /**
+     * The Azure Blob configuration details when destination*type is Azure Blob.
+     */
+    azureBlob?: pulumi.Input<inputs.NamespaceExportSinkAzureBlob | undefined>;
     /**
      * A flag indicating whether the export sink is enabled or not.
      */
@@ -129,6 +139,10 @@ export interface NamespaceExportSinkState {
  * The set of arguments for constructing a NamespaceExportSink resource.
  */
 export interface NamespaceExportSinkArgs {
+    /**
+     * The Azure Blob configuration details when destination*type is Azure Blob.
+     */
+    azureBlob?: pulumi.Input<inputs.NamespaceExportSinkAzureBlob | undefined>;
     /**
      * A flag indicating whether the export sink is enabled or not.
      */

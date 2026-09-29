@@ -20,6 +20,11 @@ export type ConnectivityRule = import("./connectivityRule").ConnectivityRule;
 export const ConnectivityRule: typeof import("./connectivityRule").ConnectivityRule = null as any;
 utilities.lazyLoad(exports, ["ConnectivityRule"], () => require("./connectivityRule"));
 
+export { CustomRoleArgs, CustomRoleState } from "./customRole";
+export type CustomRole = import("./customRole").CustomRole;
+export const CustomRole: typeof import("./customRole").CustomRole = null as any;
+utilities.lazyLoad(exports, ["CustomRole"], () => require("./customRole"));
+
 export { GetAccountAuditLogSinkArgs, GetAccountAuditLogSinkResult, GetAccountAuditLogSinkOutputArgs } from "./getAccountAuditLogSink";
 export const getAccountAuditLogSink: typeof import("./getAccountAuditLogSink").getAccountAuditLogSink = null as any;
 export const getAccountAuditLogSinkOutput: typeof import("./getAccountAuditLogSink").getAccountAuditLogSinkOutput = null as any;
@@ -125,6 +130,11 @@ export type NexusEndpoint = import("./nexusEndpoint").NexusEndpoint;
 export const NexusEndpoint: typeof import("./nexusEndpoint").NexusEndpoint = null as any;
 utilities.lazyLoad(exports, ["NexusEndpoint"], () => require("./nexusEndpoint"));
 
+export { ProjectArgs, ProjectState } from "./project";
+export type Project = import("./project").Project;
+export const Project: typeof import("./project").Project = null as any;
+utilities.lazyLoad(exports, ["Project"], () => require("./project"));
+
 export * from "./provider";
 import { Provider } from "./provider";
 
@@ -158,6 +168,8 @@ const _module = {
                 return new Apikey(name, <any>undefined, { urn })
             case "temporalcloud:index/connectivityRule:ConnectivityRule":
                 return new ConnectivityRule(name, <any>undefined, { urn })
+            case "temporalcloud:index/customRole:CustomRole":
+                return new CustomRole(name, <any>undefined, { urn })
             case "temporalcloud:index/group:Group":
                 return new Group(name, <any>undefined, { urn })
             case "temporalcloud:index/groupAccess:GroupAccess":
@@ -176,6 +188,8 @@ const _module = {
                 return new NamespaceTags(name, <any>undefined, { urn })
             case "temporalcloud:index/nexusEndpoint:NexusEndpoint":
                 return new NexusEndpoint(name, <any>undefined, { urn })
+            case "temporalcloud:index/project:Project":
+                return new Project(name, <any>undefined, { urn })
             case "temporalcloud:index/serviceAccount:ServiceAccount":
                 return new ServiceAccount(name, <any>undefined, { urn })
             case "temporalcloud:index/user:User":
@@ -188,6 +202,7 @@ const _module = {
 pulumi.runtime.registerResourceModule("temporalcloud", "index/accountAuditLogSink", _module)
 pulumi.runtime.registerResourceModule("temporalcloud", "index/apikey", _module)
 pulumi.runtime.registerResourceModule("temporalcloud", "index/connectivityRule", _module)
+pulumi.runtime.registerResourceModule("temporalcloud", "index/customRole", _module)
 pulumi.runtime.registerResourceModule("temporalcloud", "index/group", _module)
 pulumi.runtime.registerResourceModule("temporalcloud", "index/groupAccess", _module)
 pulumi.runtime.registerResourceModule("temporalcloud", "index/groupMembers", _module)
@@ -197,6 +212,7 @@ pulumi.runtime.registerResourceModule("temporalcloud", "index/namespaceExportSin
 pulumi.runtime.registerResourceModule("temporalcloud", "index/namespaceSearchAttribute", _module)
 pulumi.runtime.registerResourceModule("temporalcloud", "index/namespaceTags", _module)
 pulumi.runtime.registerResourceModule("temporalcloud", "index/nexusEndpoint", _module)
+pulumi.runtime.registerResourceModule("temporalcloud", "index/project", _module)
 pulumi.runtime.registerResourceModule("temporalcloud", "index/serviceAccount", _module)
 pulumi.runtime.registerResourceModule("temporalcloud", "index/user", _module)
 pulumi.runtime.registerResourcePackage("temporalcloud", {

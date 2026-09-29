@@ -4,7 +4,7 @@ go 1.25.9
 
 require (
 	github.com/hashicorp/terraform-plugin-framework v1.15.1
-	github.com/temporalio/terraform-provider-temporalcloud v1.3.0
+	github.com/temporalio/terraform-provider-temporalcloud v1.9.0
 )
 
 replace github.com/temporalio/terraform-provider-temporalcloud => ../../upstream
@@ -27,7 +27,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.temporal.io/api v1.53.0 // indirect
-	go.temporal.io/cloud-sdk v0.10.0 // indirect
+	go.temporal.io/cloud-sdk v0.18.0 // indirect
 	go.temporal.io/sdk v1.36.0 // indirect
 	golang.org/x/net v0.58.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect

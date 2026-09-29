@@ -115,6 +115,10 @@ export interface GetNamespaceResult {
      */
     readonly customSearchAttributes: {[key: string]: string};
     /**
+     * The description of the namespace, if set.
+     */
+    readonly description: string;
+    /**
      * The endpoints for the namespace.
      */
     readonly endpoints: outputs.GetNamespaceEndpoints;

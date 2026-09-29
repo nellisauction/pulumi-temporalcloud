@@ -104,7 +104,7 @@
                 },
                 "roleName": {
                     "type": "string",
-                    "description": "The IAM role that Temporal Cloud assumes for writing records to the customer's Kinesis stream.\n"
+                    "description": "The name of the IAM role that Temporal Cloud assumes for writing records to the customer's Kinesis stream.\n"
                 }
             },
             "type": "object",
@@ -183,6 +183,76 @@
                 "delete": {
                     "type": "string",
                     "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.\n"
+                }
+            },
+            "type": "object"
+        },
+        "temporalcloud:index/CustomRolePermission:CustomRolePermission": {
+            "properties": {
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The actions allowed by this permission.\n"
+                },
+                "resources": {
+                    "$ref": "#/types/temporalcloud:index/CustomRolePermissionResources:CustomRolePermissionResources",
+                    "description": "The resources this permission applies to.\n"
+                }
+            },
+            "type": "object",
+            "required": [
+                "actions",
+                "resources"
+            ]
+        },
+        "temporalcloud:index/CustomRolePermissionResources:CustomRolePermissionResources": {
+            "properties": {
+                "allowAll": {
+                    "type": "boolean",
+                    "description": "Whether this permission applies to all resources of the given type. If true,\u003cspan pulumi-lang-nodejs=\" resourceIds \" pulumi-lang-dotnet=\" ResourceIds \" pulumi-lang-go=\" resourceIds \" pulumi-lang-python=\" resource_ids \" pulumi-lang-yaml=\" resourceIds \" pulumi-lang-java=\" resourceIds \"\u003e resourceIds \u003c/span\u003emust be empty.\n"
+                },
+                "resourceIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The resource IDs this permission applies to. If empty,\u003cspan pulumi-lang-nodejs=\" allowAll \" pulumi-lang-dotnet=\" AllowAll \" pulumi-lang-go=\" allowAll \" pulumi-lang-python=\" allow_all \" pulumi-lang-yaml=\" allowAll \" pulumi-lang-java=\" allowAll \"\u003e allowAll \u003c/span\u003emust be true.\n"
+                },
+                "resourceType": {
+                    "type": "string",
+                    "description": "The resource type this permission applies to. Must be one of: accounts, projects, namespaces, nexus-endpoints, connectivity-rules, custom-roles.\n"
+                }
+            },
+            "type": "object",
+            "required": [
+                "resourceIds",
+                "resourceType"
+            ],
+            "language": {
+                "nodejs": {
+                    "requiredOutputs": [
+                        "allowAll",
+                        "resourceIds",
+                        "resourceType"
+                    ]
+                }
+            }
+        },
+        "temporalcloud:index/CustomRoleTimeouts:CustomRoleTimeouts": {
+            "properties": {
+                "create": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours).\n"
+                },
+                "delete": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.\n"
+                },
+                "update": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours).\n"
                 }
             },
             "type": "object"
@@ -283,6 +353,14 @@
         },
         "temporalcloud:index/NamespaceCodecServer:NamespaceCodecServer": {
             "properties": {
+                "customErrorLink": {
+                    "type": "string",
+                    "description": "A link displayed alongside the custom error message for the codec server.\n"
+                },
+                "customErrorMessage": {
+                    "type": "string",
+                    "description": "A custom error message to display when the codec server returns an error.\n"
+                },
                 "endpoint": {
                     "type": "string",
                     "description": "The endpoint of the codec server. Must begin with \"https\".\n"
@@ -335,6 +413,43 @@
                     ]
                 }
             }
+        },
+        "temporalcloud:index/NamespaceExportSinkAzureBlob:NamespaceExportSinkAzureBlob": {
+            "properties": {
+                "containerName": {
+                    "type": "string",
+                    "description": "The name of the destination Azure Blob container where Temporal will send data.\n"
+                },
+                "region": {
+                    "type": "string",
+                    "description": "The region where the Azure storage account is located.\n"
+                },
+                "resourceGroup": {
+                    "type": "string",
+                    "description": "The Azure resource group that contains the storage account.\n"
+                },
+                "storageAccount": {
+                    "type": "string",
+                    "description": "The name of the destination Azure storage account where Temporal will send data.\n"
+                },
+                "subscriptionId": {
+                    "type": "string",
+                    "description": "The Azure subscription ID that contains the storage account.\n"
+                },
+                "tenantId": {
+                    "type": "string",
+                    "description": "The customer's Azure tenant ID where the storage account exists and where Temporal's app registration is consented/granted access.\n"
+                }
+            },
+            "type": "object",
+            "required": [
+                "containerName",
+                "region",
+                "resourceGroup",
+                "storageAccount",
+                "subscriptionId",
+                "tenantId"
+            ]
         },
         "temporalcloud:index/NamespaceExportSinkGcs:NamespaceExportSinkGcs": {
             "properties": {
@@ -420,6 +535,15 @@
             },
             "type": "object"
         },
+        "temporalcloud:index/NamespaceFairness:NamespaceFairness": {
+            "properties": {
+                "taskQueueFairnessEnabled": {
+                    "type": "boolean",
+                    "description": "Flag to enable task queue fairness for the namespace. Defaults to disabled.\n"
+                }
+            },
+            "type": "object"
+        },
         "temporalcloud:index/NamespaceNamespaceLifecycle:NamespaceNamespaceLifecycle": {
             "properties": {
                 "enableDeleteProtection": {
@@ -491,6 +615,39 @@
                 "namespaceId",
                 "taskQueue"
             ]
+        },
+        "temporalcloud:index/ProjectProjectLifecycle:ProjectProjectLifecycle": {
+            "properties": {
+                "enableDeleteProtection": {
+                    "type": "boolean",
+                    "description": "If true, the Project cannot be deleted. This is a safeguard against accidental deletion. To delete a Project with this option enabled, you must first set it to false.\n"
+                }
+            },
+            "type": "object",
+            "language": {
+                "nodejs": {
+                    "requiredOutputs": [
+                        "enableDeleteProtection"
+                    ]
+                }
+            }
+        },
+        "temporalcloud:index/ProjectTimeouts:ProjectTimeouts": {
+            "properties": {
+                "create": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours).\n"
+                },
+                "delete": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.\n"
+                },
+                "update": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours).\n"
+                }
+            },
+            "type": "object"
         },
         "temporalcloud:index/ServiceAccountNamespaceAccess:ServiceAccountNamespaceAccess": {
             "properties": {
@@ -581,7 +738,7 @@
                 },
                 "roleName": {
                     "type": "string",
-                    "description": "The IAM role that Temporal Cloud assumes for writing records to the customer's Kinesis stream.\n"
+                    "description": "The name of the IAM role that Temporal Cloud assumes for writing records to the customer's Kinesis stream.\n"
                 }
             },
             "type": "object",
@@ -662,6 +819,14 @@
         },
         "temporalcloud:index/getNamespaceCodecServer:getNamespaceCodecServer": {
             "properties": {
+                "customErrorLink": {
+                    "type": "string",
+                    "description": "A link displayed alongside the custom error message for the codec server.\n"
+                },
+                "customErrorMessage": {
+                    "type": "string",
+                    "description": "A custom error message to display when the codec server returns an error.\n"
+                },
                 "endpoint": {
                     "type": "string",
                     "description": "The endpoint of the codec server.\n"
@@ -677,6 +842,8 @@
             },
             "type": "object",
             "required": [
+                "customErrorLink",
+                "customErrorMessage",
                 "endpoint",
                 "includeCrossOriginCredentials",
                 "passAccessToken"
@@ -836,6 +1003,10 @@
                     },
                     "description": "The custom search attributes to use for the namespace.\n"
                 },
+                "description": {
+                    "type": "string",
+                    "description": "The description of the namespace, if set.\n"
+                },
                 "endpoints": {
                     "$ref": "#/types/temporalcloud:index/getNamespacesNamespaceEndpoints:getNamespacesNamespaceEndpoints",
                     "description": "The endpoints for the namespace.\n"
@@ -899,6 +1070,7 @@
                 "connectivityRuleIds",
                 "createdTime",
                 "customSearchAttributes",
+                "description",
                 "endpoints",
                 "id",
                 "lastModifiedTime",
@@ -951,6 +1123,14 @@
         },
         "temporalcloud:index/getNamespacesNamespaceCodecServer:getNamespacesNamespaceCodecServer": {
             "properties": {
+                "customErrorLink": {
+                    "type": "string",
+                    "description": "A link displayed alongside the custom error message for the codec server.\n"
+                },
+                "customErrorMessage": {
+                    "type": "string",
+                    "description": "A custom error message to display when the codec server returns an error.\n"
+                },
                 "endpoint": {
                     "type": "string",
                     "description": "The endpoint of the codec server.\n"
@@ -966,6 +1146,8 @@
             },
             "type": "object",
             "required": [
+                "customErrorLink",
+                "customErrorMessage",
                 "endpoint",
                 "includeCrossOriginCredentials",
                 "passAccessToken"
@@ -1264,6 +1446,13 @@
                     "type": "string",
                     "description": "The role on the account. Must be one of admin, developer, read, or metricsread (case-insensitive).\n"
                 },
+                "accountAccessCustomRoles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.\n"
+                },
                 "createdAt": {
                     "type": "string",
                     "description": "The creation time of the Service Account.\n"
@@ -1303,6 +1492,7 @@
             "type": "object",
             "required": [
                 "accountAccess",
+                "accountAccessCustomRoles",
                 "createdAt",
                 "description",
                 "id",
@@ -1390,6 +1580,13 @@
                     "type": "string",
                     "description": "The role on the account. Must be one of admin, developer, or read (case-insensitive).\n"
                 },
+                "accountAccessCustomRoles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.\n"
+                },
                 "createdAt": {
                     "type": "string",
                     "description": "The creation time of the User.\n"
@@ -1421,6 +1618,7 @@
             "type": "object",
             "required": [
                 "accountAccess",
+                "accountAccessCustomRoles",
                 "createdAt",
                 "email",
                 "id",
@@ -1523,7 +1721,7 @@
     },
     "resources": {
         "temporalcloud:index/accountAuditLogSink:AccountAuditLogSink": {
-            "description": "Provisions an account audit log sink.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as temporalcloud from \"@pulumi/temporalcloud\";\n\n// Example with Kinesis\nconst kinesisSink = new temporalcloud.AccountAuditLogSink(\"kinesis_sink\", {\n    sinkName: \"my-kinesis-sink\",\n    enabled: true,\n    kinesis: {\n        roleName: \"arn:aws:iam::123456789012:role/TemporalCloudKinesisRole\",\n        destinationUri: \"arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\",\n        region: \"us-east-1\",\n    },\n});\n// Example with PubSub\nconst pubsubSink = new temporalcloud.AccountAuditLogSink(\"pubsub_sink\", {\n    sinkName: \"my-pubsub-sink\",\n    enabled: true,\n    pubsub: {\n        serviceAccountId: \"my-service-account-id\",\n        topicName: \"temporal-audit-logs\",\n        gcpProjectId: \"my-gcp-project\",\n    },\n});\n```\n```python\nimport pulumi\nimport pulumi_temporalcloud as temporalcloud\n\n# Example with Kinesis\nkinesis_sink = temporalcloud.AccountAuditLogSink(\"kinesis_sink\",\n    sink_name=\"my-kinesis-sink\",\n    enabled=True,\n    kinesis={\n        \"role_name\": \"arn:aws:iam::123456789012:role/TemporalCloudKinesisRole\",\n        \"destination_uri\": \"arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\",\n        \"region\": \"us-east-1\",\n    })\n# Example with PubSub\npubsub_sink = temporalcloud.AccountAuditLogSink(\"pubsub_sink\",\n    sink_name=\"my-pubsub-sink\",\n    enabled=True,\n    pubsub={\n        \"service_account_id\": \"my-service-account-id\",\n        \"topic_name\": \"temporal-audit-logs\",\n        \"gcp_project_id\": \"my-gcp-project\",\n    })\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Temporalcloud = Pulumi.Temporalcloud;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    // Example with Kinesis\n    var kinesisSink = new Temporalcloud.AccountAuditLogSink(\"kinesis_sink\", new()\n    {\n        SinkName = \"my-kinesis-sink\",\n        Enabled = true,\n        Kinesis = new Temporalcloud.Inputs.AccountAuditLogSinkKinesisArgs\n        {\n            RoleName = \"arn:aws:iam::123456789012:role/TemporalCloudKinesisRole\",\n            DestinationUri = \"arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\",\n            Region = \"us-east-1\",\n        },\n    });\n\n    // Example with PubSub\n    var pubsubSink = new Temporalcloud.AccountAuditLogSink(\"pubsub_sink\", new()\n    {\n        SinkName = \"my-pubsub-sink\",\n        Enabled = true,\n        Pubsub = new Temporalcloud.Inputs.AccountAuditLogSinkPubsubArgs\n        {\n            ServiceAccountId = \"my-service-account-id\",\n            TopicName = \"temporal-audit-logs\",\n            GcpProjectId = \"my-gcp-project\",\n        },\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi-terraform-provider/sdks/go/temporalcloud/temporalcloud\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t// Example with Kinesis\n\t\t_, err := temporalcloud.NewAccountAuditLogSink(ctx, \"kinesis_sink\", \u0026temporalcloud.AccountAuditLogSinkArgs{\n\t\t\tSinkName: pulumi.String(\"my-kinesis-sink\"),\n\t\t\tEnabled:  pulumi.Bool(true),\n\t\t\tKinesis: \u0026temporalcloud.AccountAuditLogSinkKinesisArgs{\n\t\t\t\tRoleName:       pulumi.String(\"arn:aws:iam::123456789012:role/TemporalCloudKinesisRole\"),\n\t\t\t\tDestinationUri: pulumi.String(\"arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\"),\n\t\t\t\tRegion:         pulumi.String(\"us-east-1\"),\n\t\t\t},\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t// Example with PubSub\n\t\t_, err = temporalcloud.NewAccountAuditLogSink(ctx, \"pubsub_sink\", \u0026temporalcloud.AccountAuditLogSinkArgs{\n\t\t\tSinkName: pulumi.String(\"my-pubsub-sink\"),\n\t\t\tEnabled:  pulumi.Bool(true),\n\t\t\tPubsub: \u0026temporalcloud.AccountAuditLogSinkPubsubArgs{\n\t\t\t\tServiceAccountId: pulumi.String(\"my-service-account-id\"),\n\t\t\t\tTopicName:        pulumi.String(\"temporal-audit-logs\"),\n\t\t\t\tGcpProjectId:     pulumi.String(\"my-gcp-project\"),\n\t\t\t},\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.temporalcloud.AccountAuditLogSink;\nimport com.pulumi.temporalcloud.AccountAuditLogSinkArgs;\nimport com.pulumi.temporalcloud.inputs.AccountAuditLogSinkKinesisArgs;\nimport com.pulumi.temporalcloud.inputs.AccountAuditLogSinkPubsubArgs;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        // Example with Kinesis\n        var kinesisSink = new AccountAuditLogSink(\"kinesisSink\", AccountAuditLogSinkArgs.builder()\n            .sinkName(\"my-kinesis-sink\")\n            .enabled(true)\n            .kinesis(AccountAuditLogSinkKinesisArgs.builder()\n                .roleName(\"arn:aws:iam::123456789012:role/TemporalCloudKinesisRole\")\n                .destinationUri(\"arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\")\n                .region(\"us-east-1\")\n                .build())\n            .build());\n\n        // Example with PubSub\n        var pubsubSink = new AccountAuditLogSink(\"pubsubSink\", AccountAuditLogSinkArgs.builder()\n            .sinkName(\"my-pubsub-sink\")\n            .enabled(true)\n            .pubsub(AccountAuditLogSinkPubsubArgs.builder()\n                .serviceAccountId(\"my-service-account-id\")\n                .topicName(\"temporal-audit-logs\")\n                .gcpProjectId(\"my-gcp-project\")\n                .build())\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  # Example with Kinesis\n  kinesisSink:\n    type: temporalcloud:AccountAuditLogSink\n    name: kinesis_sink\n    properties:\n      sinkName: my-kinesis-sink\n      enabled: true\n      kinesis:\n        roleName: arn:aws:iam::123456789012:role/TemporalCloudKinesisRole\n        destinationUri: arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\n        region: us-east-1\n  # Example with PubSub\n  pubsubSink:\n    type: temporalcloud:AccountAuditLogSink\n    name: pubsub_sink\n    properties:\n      sinkName: my-pubsub-sink\n      enabled: true\n      pubsub:\n        serviceAccountId: my-service-account-id\n        topicName: temporal-audit-logs\n        gcpProjectId: my-gcp-project\n```\n\u003c!--End PulumiCodeChooser --\u003e\n",
+            "description": "Provisions an account audit log sink.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as temporalcloud from \"@pulumi/temporalcloud\";\n\n// Example with Kinesis\nconst kinesisSink = new temporalcloud.AccountAuditLogSink(\"kinesis_sink\", {\n    sinkName: \"my-kinesis-sink\",\n    enabled: true,\n    kinesis: {\n        roleName: \"TemporalCloudKinesisRole\",\n        destinationUri: \"arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\",\n        region: \"us-east-1\",\n    },\n});\n// Example with PubSub\nconst pubsubSink = new temporalcloud.AccountAuditLogSink(\"pubsub_sink\", {\n    sinkName: \"my-pubsub-sink\",\n    enabled: true,\n    pubsub: {\n        serviceAccountId: \"my-service-account-id\",\n        topicName: \"temporal-audit-logs\",\n        gcpProjectId: \"my-gcp-project\",\n    },\n});\n```\n```python\nimport pulumi\nimport pulumi_temporalcloud as temporalcloud\n\n# Example with Kinesis\nkinesis_sink = temporalcloud.AccountAuditLogSink(\"kinesis_sink\",\n    sink_name=\"my-kinesis-sink\",\n    enabled=True,\n    kinesis={\n        \"role_name\": \"TemporalCloudKinesisRole\",\n        \"destination_uri\": \"arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\",\n        \"region\": \"us-east-1\",\n    })\n# Example with PubSub\npubsub_sink = temporalcloud.AccountAuditLogSink(\"pubsub_sink\",\n    sink_name=\"my-pubsub-sink\",\n    enabled=True,\n    pubsub={\n        \"service_account_id\": \"my-service-account-id\",\n        \"topic_name\": \"temporal-audit-logs\",\n        \"gcp_project_id\": \"my-gcp-project\",\n    })\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Temporalcloud = Pulumi.Temporalcloud;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    // Example with Kinesis\n    var kinesisSink = new Temporalcloud.AccountAuditLogSink(\"kinesis_sink\", new()\n    {\n        SinkName = \"my-kinesis-sink\",\n        Enabled = true,\n        Kinesis = new Temporalcloud.Inputs.AccountAuditLogSinkKinesisArgs\n        {\n            RoleName = \"TemporalCloudKinesisRole\",\n            DestinationUri = \"arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\",\n            Region = \"us-east-1\",\n        },\n    });\n\n    // Example with PubSub\n    var pubsubSink = new Temporalcloud.AccountAuditLogSink(\"pubsub_sink\", new()\n    {\n        SinkName = \"my-pubsub-sink\",\n        Enabled = true,\n        Pubsub = new Temporalcloud.Inputs.AccountAuditLogSinkPubsubArgs\n        {\n            ServiceAccountId = \"my-service-account-id\",\n            TopicName = \"temporal-audit-logs\",\n            GcpProjectId = \"my-gcp-project\",\n        },\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi-terraform-provider/sdks/go/temporalcloud/temporalcloud\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t// Example with Kinesis\n\t\t_, err := temporalcloud.NewAccountAuditLogSink(ctx, \"kinesis_sink\", \u0026temporalcloud.AccountAuditLogSinkArgs{\n\t\t\tSinkName: pulumi.String(\"my-kinesis-sink\"),\n\t\t\tEnabled:  pulumi.Bool(true),\n\t\t\tKinesis: \u0026temporalcloud.AccountAuditLogSinkKinesisArgs{\n\t\t\t\tRoleName:       pulumi.String(\"TemporalCloudKinesisRole\"),\n\t\t\t\tDestinationUri: pulumi.String(\"arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\"),\n\t\t\t\tRegion:         pulumi.String(\"us-east-1\"),\n\t\t\t},\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t// Example with PubSub\n\t\t_, err = temporalcloud.NewAccountAuditLogSink(ctx, \"pubsub_sink\", \u0026temporalcloud.AccountAuditLogSinkArgs{\n\t\t\tSinkName: pulumi.String(\"my-pubsub-sink\"),\n\t\t\tEnabled:  pulumi.Bool(true),\n\t\t\tPubsub: \u0026temporalcloud.AccountAuditLogSinkPubsubArgs{\n\t\t\t\tServiceAccountId: pulumi.String(\"my-service-account-id\"),\n\t\t\t\tTopicName:        pulumi.String(\"temporal-audit-logs\"),\n\t\t\t\tGcpProjectId:     pulumi.String(\"my-gcp-project\"),\n\t\t\t},\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.temporalcloud.AccountAuditLogSink;\nimport com.pulumi.temporalcloud.AccountAuditLogSinkArgs;\nimport com.pulumi.temporalcloud.inputs.AccountAuditLogSinkKinesisArgs;\nimport com.pulumi.temporalcloud.inputs.AccountAuditLogSinkPubsubArgs;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        // Example with Kinesis\n        var kinesisSink = new AccountAuditLogSink(\"kinesisSink\", AccountAuditLogSinkArgs.builder()\n            .sinkName(\"my-kinesis-sink\")\n            .enabled(true)\n            .kinesis(AccountAuditLogSinkKinesisArgs.builder()\n                .roleName(\"TemporalCloudKinesisRole\")\n                .destinationUri(\"arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\")\n                .region(\"us-east-1\")\n                .build())\n            .build());\n\n        // Example with PubSub\n        var pubsubSink = new AccountAuditLogSink(\"pubsubSink\", AccountAuditLogSinkArgs.builder()\n            .sinkName(\"my-pubsub-sink\")\n            .enabled(true)\n            .pubsub(AccountAuditLogSinkPubsubArgs.builder()\n                .serviceAccountId(\"my-service-account-id\")\n                .topicName(\"temporal-audit-logs\")\n                .gcpProjectId(\"my-gcp-project\")\n                .build())\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  # Example with Kinesis\n  kinesisSink:\n    type: temporalcloud:AccountAuditLogSink\n    name: kinesis_sink\n    properties:\n      sinkName: my-kinesis-sink\n      enabled: true\n      kinesis:\n        roleName: TemporalCloudKinesisRole\n        destinationUri: arn:aws:kinesis:us-east-1:123456789012:stream/my-audit-stream\n        region: us-east-1\n  # Example with PubSub\n  pubsubSink:\n    type: temporalcloud:AccountAuditLogSink\n    name: pubsub_sink\n    properties:\n      sinkName: my-pubsub-sink\n      enabled: true\n      pubsub:\n        serviceAccountId: my-service-account-id\n        topicName: temporal-audit-logs\n        gcpProjectId: my-gcp-project\n```\n\u003c!--End PulumiCodeChooser --\u003e\n",
             "properties": {
                 "enabled": {
                     "type": "boolean",
@@ -1727,47 +1925,65 @@
             }
         },
         "temporalcloud:index/connectivityRule:ConnectivityRule": {
-            "description": "Provisions a Temporal Cloud Connectivity Rule.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as temporalcloud from \"@pulumi/temporalcloud\";\n\n// Create Public Connectivity Rule\nconst publicRule = new temporalcloud.ConnectivityRule(\"public_rule\", {connectivityType: \"public\"});\n// Create Private Connectivity Rule for AWS\nconst privateAws = new temporalcloud.ConnectivityRule(\"private_aws\", {\n    connectivityType: \"private\",\n    connectionId: \"vpce-12345678\",\n    region: \"aws-us-west-2\",\n});\n// Create Private Connectivity Rule for GCP\nconst privateGcp = new temporalcloud.ConnectivityRule(\"private_gcp\", {\n    connectivityType: \"private\",\n    connectionId: \"vpce-12345678\",\n    region: \"gcp-us-central1\",\n    gcpProjectId: \"my-gcp-project-id\",\n});\n// Attaching connectivity rules to a namespace\nconst ns_with_cr = new temporalcloud.Namespace(\"ns-with-cr\", {\n    name: \"ns-with-cr\",\n    regions: [\"aws-us-west-2\"],\n    apiKeyAuth: true,\n    retentionDays: 14,\n    connectivityRuleIds: [\n        id,\n        idPrivateAws,\n    ],\n});\n```\n```python\nimport pulumi\nimport pulumi_temporalcloud as temporalcloud\n\n# Create Public Connectivity Rule\npublic_rule = temporalcloud.ConnectivityRule(\"public_rule\", connectivity_type=\"public\")\n# Create Private Connectivity Rule for AWS\nprivate_aws = temporalcloud.ConnectivityRule(\"private_aws\",\n    connectivity_type=\"private\",\n    connection_id=\"vpce-12345678\",\n    region=\"aws-us-west-2\")\n# Create Private Connectivity Rule for GCP\nprivate_gcp = temporalcloud.ConnectivityRule(\"private_gcp\",\n    connectivity_type=\"private\",\n    connection_id=\"vpce-12345678\",\n    region=\"gcp-us-central1\",\n    gcp_project_id=\"my-gcp-project-id\")\n# Attaching connectivity rules to a namespace\nns_with_cr = temporalcloud.Namespace(\"ns-with-cr\",\n    name=\"ns-with-cr\",\n    regions=[\"aws-us-west-2\"],\n    api_key_auth=True,\n    retention_days=float(14),\n    connectivity_rule_ids=[\n        id,\n        id_private_aws,\n    ])\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Temporalcloud = Pulumi.Temporalcloud;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    // Create Public Connectivity Rule\n    var publicRule = new Temporalcloud.ConnectivityRule(\"public_rule\", new()\n    {\n        ConnectivityType = \"public\",\n    });\n\n    // Create Private Connectivity Rule for AWS\n    var privateAws = new Temporalcloud.ConnectivityRule(\"private_aws\", new()\n    {\n        ConnectivityType = \"private\",\n        ConnectionId = \"vpce-12345678\",\n        Region = \"aws-us-west-2\",\n    });\n\n    // Create Private Connectivity Rule for GCP\n    var privateGcp = new Temporalcloud.ConnectivityRule(\"private_gcp\", new()\n    {\n        ConnectivityType = \"private\",\n        ConnectionId = \"vpce-12345678\",\n        Region = \"gcp-us-central1\",\n        GcpProjectId = \"my-gcp-project-id\",\n    });\n\n    // Attaching connectivity rules to a namespace\n    var ns_with_cr = new Temporalcloud.Namespace(\"ns-with-cr\", new()\n    {\n        Name = \"ns-with-cr\",\n        Regions = new[]\n        {\n            \"aws-us-west-2\",\n        },\n        ApiKeyAuth = true,\n        RetentionDays = 14,\n        ConnectivityRuleIds = new[]\n        {\n            id,\n            idPrivateAws,\n        },\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi-terraform-provider/sdks/go/temporalcloud/temporalcloud\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t// Create Public Connectivity Rule\n\t\t_, err := temporalcloud.NewConnectivityRule(ctx, \"public_rule\", \u0026temporalcloud.ConnectivityRuleArgs{\n\t\t\tConnectivityType: pulumi.String(\"public\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t// Create Private Connectivity Rule for AWS\n\t\t_, err = temporalcloud.NewConnectivityRule(ctx, \"private_aws\", \u0026temporalcloud.ConnectivityRuleArgs{\n\t\t\tConnectivityType: pulumi.String(\"private\"),\n\t\t\tConnectionId:     pulumi.String(\"vpce-12345678\"),\n\t\t\tRegion:           pulumi.String(\"aws-us-west-2\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t// Create Private Connectivity Rule for GCP\n\t\t_, err = temporalcloud.NewConnectivityRule(ctx, \"private_gcp\", \u0026temporalcloud.ConnectivityRuleArgs{\n\t\t\tConnectivityType: pulumi.String(\"private\"),\n\t\t\tConnectionId:     pulumi.String(\"vpce-12345678\"),\n\t\t\tRegion:           pulumi.String(\"gcp-us-central1\"),\n\t\t\tGcpProjectId:     pulumi.String(\"my-gcp-project-id\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t// Attaching connectivity rules to a namespace\n\t\t_, err = temporalcloud.NewNamespace(ctx, \"ns-with-cr\", \u0026temporalcloud.NamespaceArgs{\n\t\t\tName: pulumi.String(\"ns-with-cr\"),\n\t\t\tRegions: pulumi.StringArray{\n\t\t\t\tpulumi.String(\"aws-us-west-2\"),\n\t\t\t},\n\t\t\tApiKeyAuth:    pulumi.Bool(true),\n\t\t\tRetentionDays: pulumi.Float64(14),\n\t\t\tConnectivityRuleIds: pulumi.StringArray{\n\t\t\t\tid,\n\t\t\t\tidPrivateAws,\n\t\t\t},\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.temporalcloud.ConnectivityRule;\nimport com.pulumi.temporalcloud.ConnectivityRuleArgs;\nimport com.pulumi.temporalcloud.Namespace;\nimport com.pulumi.temporalcloud.NamespaceArgs;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        // Create Public Connectivity Rule\n        var publicRule = new ConnectivityRule(\"publicRule\", ConnectivityRuleArgs.builder()\n            .connectivityType(\"public\")\n            .build());\n\n        // Create Private Connectivity Rule for AWS\n        var privateAws = new ConnectivityRule(\"privateAws\", ConnectivityRuleArgs.builder()\n            .connectivityType(\"private\")\n            .connectionId(\"vpce-12345678\")\n            .region(\"aws-us-west-2\")\n            .build());\n\n        // Create Private Connectivity Rule for GCP\n        var privateGcp = new ConnectivityRule(\"privateGcp\", ConnectivityRuleArgs.builder()\n            .connectivityType(\"private\")\n            .connectionId(\"vpce-12345678\")\n            .region(\"gcp-us-central1\")\n            .gcpProjectId(\"my-gcp-project-id\")\n            .build());\n\n        // Attaching connectivity rules to a namespace\n        var ns_with_cr = new Namespace(\"ns-with-cr\", NamespaceArgs.builder()\n            .name(\"ns-with-cr\")\n            .regions(\"aws-us-west-2\")\n            .apiKeyAuth(true)\n            .retentionDays(14.0)\n            .connectivityRuleIds(            \n                id,\n                idPrivateAws)\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  # Create Public Connectivity Rule\n  publicRule:\n    type: temporalcloud:ConnectivityRule\n    name: public_rule\n    properties:\n      connectivityType: public\n  # Create Private Connectivity Rule for AWS\n  privateAws:\n    type: temporalcloud:ConnectivityRule\n    name: private_aws\n    properties:\n      connectivityType: private\n      connectionId: vpce-12345678\n      region: aws-us-west-2\n  # Create Private Connectivity Rule for GCP\n  privateGcp:\n    type: temporalcloud:ConnectivityRule\n    name: private_gcp\n    properties:\n      connectivityType: private\n      connectionId: vpce-12345678\n      region: gcp-us-central1\n      gcpProjectId: my-gcp-project-id\n  # Attaching connectivity rules to a namespace\n  ns-with-cr:\n    type: temporalcloud:Namespace\n    properties:\n      name: ns-with-cr\n      regions:\n        - aws-us-west-2\n      apiKeyAuth: true\n      retentionDays: 14\n      connectivityRuleIds:\n        - ${id}\n        - ${idPrivateAws}\n```\n\u003c!--End PulumiCodeChooser --\u003e\n",
+            "description": "Provisions a Temporal Cloud Connectivity Rule.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as temporalcloud from \"@pulumi/temporalcloud\";\n\n// Create Public Connectivity Rule\nconst publicRule = new temporalcloud.ConnectivityRule(\"public_rule\", {connectivityType: \"public\"});\n// Create Public Connectivity Rule with stable IPs enabled\nconst publicRuleStableIps = new temporalcloud.ConnectivityRule(\"public_rule_stable_ips\", {\n    connectivityType: \"public\",\n    enableStableIps: true,\n});\n// Create Private Connectivity Rule for AWS\nconst privateAws = new temporalcloud.ConnectivityRule(\"private_aws\", {\n    connectivityType: \"private\",\n    connectionId: \"vpce-12345678\",\n    region: \"aws-us-west-2\",\n});\n// Create Private Connectivity Rule for GCP\nconst privateGcp = new temporalcloud.ConnectivityRule(\"private_gcp\", {\n    connectivityType: \"private\",\n    connectionId: \"vpce-12345678\",\n    region: \"gcp-us-central1\",\n    gcpProjectId: \"my-gcp-project-id\",\n});\n// Create Private Connectivity Rule for Azure\nconst privateAzure = new temporalcloud.ConnectivityRule(\"private_azure\", {\n    connectivityType: \"private\",\n    region: \"azure-centralus\",\n    azurePeResourceId: \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.Network/privateEndpoints/my-pe\",\n});\n// Attaching connectivity rules to a namespace\nconst ns_with_cr = new temporalcloud.Namespace(\"ns-with-cr\", {\n    name: \"ns-with-cr\",\n    regions: [\"aws-us-west-2\"],\n    apiKeyAuth: true,\n    retentionDays: 14,\n    connectivityRuleIds: [\n        id,\n        idPrivateAws,\n    ],\n});\n```\n```python\nimport pulumi\nimport pulumi_temporalcloud as temporalcloud\n\n# Create Public Connectivity Rule\npublic_rule = temporalcloud.ConnectivityRule(\"public_rule\", connectivity_type=\"public\")\n# Create Public Connectivity Rule with stable IPs enabled\npublic_rule_stable_ips = temporalcloud.ConnectivityRule(\"public_rule_stable_ips\",\n    connectivity_type=\"public\",\n    enable_stable_ips=True)\n# Create Private Connectivity Rule for AWS\nprivate_aws = temporalcloud.ConnectivityRule(\"private_aws\",\n    connectivity_type=\"private\",\n    connection_id=\"vpce-12345678\",\n    region=\"aws-us-west-2\")\n# Create Private Connectivity Rule for GCP\nprivate_gcp = temporalcloud.ConnectivityRule(\"private_gcp\",\n    connectivity_type=\"private\",\n    connection_id=\"vpce-12345678\",\n    region=\"gcp-us-central1\",\n    gcp_project_id=\"my-gcp-project-id\")\n# Create Private Connectivity Rule for Azure\nprivate_azure = temporalcloud.ConnectivityRule(\"private_azure\",\n    connectivity_type=\"private\",\n    region=\"azure-centralus\",\n    azure_pe_resource_id=\"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.Network/privateEndpoints/my-pe\")\n# Attaching connectivity rules to a namespace\nns_with_cr = temporalcloud.Namespace(\"ns-with-cr\",\n    name=\"ns-with-cr\",\n    regions=[\"aws-us-west-2\"],\n    api_key_auth=True,\n    retention_days=float(14),\n    connectivity_rule_ids=[\n        id,\n        id_private_aws,\n    ])\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Temporalcloud = Pulumi.Temporalcloud;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    // Create Public Connectivity Rule\n    var publicRule = new Temporalcloud.ConnectivityRule(\"public_rule\", new()\n    {\n        ConnectivityType = \"public\",\n    });\n\n    // Create Public Connectivity Rule with stable IPs enabled\n    var publicRuleStableIps = new Temporalcloud.ConnectivityRule(\"public_rule_stable_ips\", new()\n    {\n        ConnectivityType = \"public\",\n        EnableStableIps = true,\n    });\n\n    // Create Private Connectivity Rule for AWS\n    var privateAws = new Temporalcloud.ConnectivityRule(\"private_aws\", new()\n    {\n        ConnectivityType = \"private\",\n        ConnectionId = \"vpce-12345678\",\n        Region = \"aws-us-west-2\",\n    });\n\n    // Create Private Connectivity Rule for GCP\n    var privateGcp = new Temporalcloud.ConnectivityRule(\"private_gcp\", new()\n    {\n        ConnectivityType = \"private\",\n        ConnectionId = \"vpce-12345678\",\n        Region = \"gcp-us-central1\",\n        GcpProjectId = \"my-gcp-project-id\",\n    });\n\n    // Create Private Connectivity Rule for Azure\n    var privateAzure = new Temporalcloud.ConnectivityRule(\"private_azure\", new()\n    {\n        ConnectivityType = \"private\",\n        Region = \"azure-centralus\",\n        AzurePeResourceId = \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.Network/privateEndpoints/my-pe\",\n    });\n\n    // Attaching connectivity rules to a namespace\n    var ns_with_cr = new Temporalcloud.Namespace(\"ns-with-cr\", new()\n    {\n        Name = \"ns-with-cr\",\n        Regions = new[]\n        {\n            \"aws-us-west-2\",\n        },\n        ApiKeyAuth = true,\n        RetentionDays = 14,\n        ConnectivityRuleIds = new[]\n        {\n            id,\n            idPrivateAws,\n        },\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi-terraform-provider/sdks/go/temporalcloud/temporalcloud\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t// Create Public Connectivity Rule\n\t\t_, err := temporalcloud.NewConnectivityRule(ctx, \"public_rule\", \u0026temporalcloud.ConnectivityRuleArgs{\n\t\t\tConnectivityType: pulumi.String(\"public\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t// Create Public Connectivity Rule with stable IPs enabled\n\t\t_, err = temporalcloud.NewConnectivityRule(ctx, \"public_rule_stable_ips\", \u0026temporalcloud.ConnectivityRuleArgs{\n\t\t\tConnectivityType: pulumi.String(\"public\"),\n\t\t\tEnableStableIps:  pulumi.Bool(true),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t// Create Private Connectivity Rule for AWS\n\t\t_, err = temporalcloud.NewConnectivityRule(ctx, \"private_aws\", \u0026temporalcloud.ConnectivityRuleArgs{\n\t\t\tConnectivityType: pulumi.String(\"private\"),\n\t\t\tConnectionId:     pulumi.String(\"vpce-12345678\"),\n\t\t\tRegion:           pulumi.String(\"aws-us-west-2\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t// Create Private Connectivity Rule for GCP\n\t\t_, err = temporalcloud.NewConnectivityRule(ctx, \"private_gcp\", \u0026temporalcloud.ConnectivityRuleArgs{\n\t\t\tConnectivityType: pulumi.String(\"private\"),\n\t\t\tConnectionId:     pulumi.String(\"vpce-12345678\"),\n\t\t\tRegion:           pulumi.String(\"gcp-us-central1\"),\n\t\t\tGcpProjectId:     pulumi.String(\"my-gcp-project-id\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t// Create Private Connectivity Rule for Azure\n\t\t_, err = temporalcloud.NewConnectivityRule(ctx, \"private_azure\", \u0026temporalcloud.ConnectivityRuleArgs{\n\t\t\tConnectivityType:  pulumi.String(\"private\"),\n\t\t\tRegion:            pulumi.String(\"azure-centralus\"),\n\t\t\tAzurePeResourceId: pulumi.String(\"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.Network/privateEndpoints/my-pe\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t// Attaching connectivity rules to a namespace\n\t\t_, err = temporalcloud.NewNamespace(ctx, \"ns-with-cr\", \u0026temporalcloud.NamespaceArgs{\n\t\t\tName: pulumi.String(\"ns-with-cr\"),\n\t\t\tRegions: pulumi.StringArray{\n\t\t\t\tpulumi.String(\"aws-us-west-2\"),\n\t\t\t},\n\t\t\tApiKeyAuth:    pulumi.Bool(true),\n\t\t\tRetentionDays: pulumi.Float64(14),\n\t\t\tConnectivityRuleIds: pulumi.StringArray{\n\t\t\t\tid,\n\t\t\t\tidPrivateAws,\n\t\t\t},\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.temporalcloud.ConnectivityRule;\nimport com.pulumi.temporalcloud.ConnectivityRuleArgs;\nimport com.pulumi.temporalcloud.Namespace;\nimport com.pulumi.temporalcloud.NamespaceArgs;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        // Create Public Connectivity Rule\n        var publicRule = new ConnectivityRule(\"publicRule\", ConnectivityRuleArgs.builder()\n            .connectivityType(\"public\")\n            .build());\n\n        // Create Public Connectivity Rule with stable IPs enabled\n        var publicRuleStableIps = new ConnectivityRule(\"publicRuleStableIps\", ConnectivityRuleArgs.builder()\n            .connectivityType(\"public\")\n            .enableStableIps(true)\n            .build());\n\n        // Create Private Connectivity Rule for AWS\n        var privateAws = new ConnectivityRule(\"privateAws\", ConnectivityRuleArgs.builder()\n            .connectivityType(\"private\")\n            .connectionId(\"vpce-12345678\")\n            .region(\"aws-us-west-2\")\n            .build());\n\n        // Create Private Connectivity Rule for GCP\n        var privateGcp = new ConnectivityRule(\"privateGcp\", ConnectivityRuleArgs.builder()\n            .connectivityType(\"private\")\n            .connectionId(\"vpce-12345678\")\n            .region(\"gcp-us-central1\")\n            .gcpProjectId(\"my-gcp-project-id\")\n            .build());\n\n        // Create Private Connectivity Rule for Azure\n        var privateAzure = new ConnectivityRule(\"privateAzure\", ConnectivityRuleArgs.builder()\n            .connectivityType(\"private\")\n            .region(\"azure-centralus\")\n            .azurePeResourceId(\"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.Network/privateEndpoints/my-pe\")\n            .build());\n\n        // Attaching connectivity rules to a namespace\n        var ns_with_cr = new Namespace(\"ns-with-cr\", NamespaceArgs.builder()\n            .name(\"ns-with-cr\")\n            .regions(\"aws-us-west-2\")\n            .apiKeyAuth(true)\n            .retentionDays(14.0)\n            .connectivityRuleIds(            \n                id,\n                idPrivateAws)\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  # Create Public Connectivity Rule\n  publicRule:\n    type: temporalcloud:ConnectivityRule\n    name: public_rule\n    properties:\n      connectivityType: public\n  # Create Public Connectivity Rule with stable IPs enabled\n  publicRuleStableIps:\n    type: temporalcloud:ConnectivityRule\n    name: public_rule_stable_ips\n    properties:\n      connectivityType: public\n      enableStableIps: true\n  # Create Private Connectivity Rule for AWS\n  privateAws:\n    type: temporalcloud:ConnectivityRule\n    name: private_aws\n    properties:\n      connectivityType: private\n      connectionId: vpce-12345678\n      region: aws-us-west-2\n  # Create Private Connectivity Rule for GCP\n  privateGcp:\n    type: temporalcloud:ConnectivityRule\n    name: private_gcp\n    properties:\n      connectivityType: private\n      connectionId: vpce-12345678\n      region: gcp-us-central1\n      gcpProjectId: my-gcp-project-id\n  # Create Private Connectivity Rule for Azure\n  privateAzure:\n    type: temporalcloud:ConnectivityRule\n    name: private_azure\n    properties:\n      connectivityType: private\n      region: azure-centralus\n      azurePeResourceId: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.Network/privateEndpoints/my-pe\n  # Attaching connectivity rules to a namespace\n  ns-with-cr:\n    type: temporalcloud:Namespace\n    properties:\n      name: ns-with-cr\n      regions:\n        - aws-us-west-2\n      apiKeyAuth: true\n      retentionDays: 14\n      connectivityRuleIds:\n        - ${id}\n        - ${idPrivateAws}\n```\n\u003c!--End PulumiCodeChooser --\u003e\n",
             "properties": {
+                "azurePeResourceId": {
+                    "type": "string",
+                    "description": "The ARM resource ID of the customer's Azure Private Endpoint. Required when region starts with 'azure'. Example: '/subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.Network/privateEndpoints/{name}'.\n"
+                },
                 "connectionId": {
                     "type": "string",
-                    "description": "The connection ID of the private connection.\n"
+                    "description": "The connection ID of the private connection. Not applicable for Azure, where this is populated automatically after the Private Endpoint connection is approved.\n"
                 },
                 "connectivityType": {
                     "type": "string",
                     "description": "The type of connectivity. Must be one of 'public' or 'private'.\n"
                 },
+                "enableStableIps": {
+                    "type": "boolean",
+                    "description": "If true, namespaces attached to this public connectivity rule will be reachable via a predictable set of public IPs. Only applies when\u003cspan pulumi-lang-nodejs=\" connectivityType \" pulumi-lang-dotnet=\" ConnectivityType \" pulumi-lang-go=\" connectivityType \" pulumi-lang-python=\" connectivity_type \" pulumi-lang-yaml=\" connectivityType \" pulumi-lang-java=\" connectivityType \"\u003e connectivityType \u003c/span\u003eis 'public'.\n"
+                },
                 "gcpProjectId": {
                     "type": "string",
-                    "description": "The GCP project ID. Required when\u003cspan pulumi-lang-nodejs=\" cloudProvider \" pulumi-lang-dotnet=\" CloudProvider \" pulumi-lang-go=\" cloudProvider \" pulumi-lang-python=\" cloud_provider \" pulumi-lang-yaml=\" cloudProvider \" pulumi-lang-java=\" cloudProvider \"\u003e cloudProvider \u003c/span\u003eis 'gcp'.\n"
+                    "description": "The GCP project ID. Required when region is 'gcp'.\n"
                 },
                 "region": {
                     "type": "string",
-                    "description": "The region of the connection. Example: 'aws-us-west-2'.\n"
+                    "description": "The region of the connection. Example: 'aws-us-west-2', 'gcp-us-central1', 'azure-centralus'.\n"
                 },
                 "timeouts": {
                     "$ref": "#/types/temporalcloud:index/ConnectivityRuleTimeouts:ConnectivityRuleTimeouts"
                 }
             },
             "required": [
-                "connectivityType"
+                "connectionId",
+                "connectivityType",
+                "enableStableIps"
             ],
             "inputProperties": {
+                "azurePeResourceId": {
+                    "type": "string",
+                    "description": "The ARM resource ID of the customer's Azure Private Endpoint. Required when region starts with 'azure'. Example: '/subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.Network/privateEndpoints/{name}'.\n"
+                },
                 "connectionId": {
                     "type": "string",
-                    "description": "The connection ID of the private connection.\n"
+                    "description": "The connection ID of the private connection. Not applicable for Azure, where this is populated automatically after the Private Endpoint connection is approved.\n"
                 },
                 "connectivityType": {
                     "type": "string",
                     "description": "The type of connectivity. Must be one of 'public' or 'private'.\n"
                 },
+                "enableStableIps": {
+                    "type": "boolean",
+                    "description": "If true, namespaces attached to this public connectivity rule will be reachable via a predictable set of public IPs. Only applies when\u003cspan pulumi-lang-nodejs=\" connectivityType \" pulumi-lang-dotnet=\" ConnectivityType \" pulumi-lang-go=\" connectivityType \" pulumi-lang-python=\" connectivity_type \" pulumi-lang-yaml=\" connectivityType \" pulumi-lang-java=\" connectivityType \"\u003e connectivityType \u003c/span\u003eis 'public'.\n"
+                },
                 "gcpProjectId": {
                     "type": "string",
-                    "description": "The GCP project ID. Required when\u003cspan pulumi-lang-nodejs=\" cloudProvider \" pulumi-lang-dotnet=\" CloudProvider \" pulumi-lang-go=\" cloudProvider \" pulumi-lang-python=\" cloud_provider \" pulumi-lang-yaml=\" cloudProvider \" pulumi-lang-java=\" cloudProvider \"\u003e cloudProvider \u003c/span\u003eis 'gcp'.\n"
+                    "description": "The GCP project ID. Required when region is 'gcp'.\n"
                 },
                 "region": {
                     "type": "string",
-                    "description": "The region of the connection. Example: 'aws-us-west-2'.\n"
+                    "description": "The region of the connection. Example: 'aws-us-west-2', 'gcp-us-central1', 'azure-centralus'.\n"
                 },
                 "timeouts": {
                     "$ref": "#/types/temporalcloud:index/ConnectivityRuleTimeouts:ConnectivityRuleTimeouts"
@@ -1779,24 +1995,116 @@
             "stateInputs": {
                 "description": "Input properties used for looking up and filtering ConnectivityRule resources.\n",
                 "properties": {
+                    "azurePeResourceId": {
+                        "type": "string",
+                        "description": "The ARM resource ID of the customer's Azure Private Endpoint. Required when region starts with 'azure'. Example: '/subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.Network/privateEndpoints/{name}'.\n"
+                    },
                     "connectionId": {
                         "type": "string",
-                        "description": "The connection ID of the private connection.\n"
+                        "description": "The connection ID of the private connection. Not applicable for Azure, where this is populated automatically after the Private Endpoint connection is approved.\n"
                     },
                     "connectivityType": {
                         "type": "string",
                         "description": "The type of connectivity. Must be one of 'public' or 'private'.\n"
                     },
+                    "enableStableIps": {
+                        "type": "boolean",
+                        "description": "If true, namespaces attached to this public connectivity rule will be reachable via a predictable set of public IPs. Only applies when\u003cspan pulumi-lang-nodejs=\" connectivityType \" pulumi-lang-dotnet=\" ConnectivityType \" pulumi-lang-go=\" connectivityType \" pulumi-lang-python=\" connectivity_type \" pulumi-lang-yaml=\" connectivityType \" pulumi-lang-java=\" connectivityType \"\u003e connectivityType \u003c/span\u003eis 'public'.\n"
+                    },
                     "gcpProjectId": {
                         "type": "string",
-                        "description": "The GCP project ID. Required when\u003cspan pulumi-lang-nodejs=\" cloudProvider \" pulumi-lang-dotnet=\" CloudProvider \" pulumi-lang-go=\" cloudProvider \" pulumi-lang-python=\" cloud_provider \" pulumi-lang-yaml=\" cloudProvider \" pulumi-lang-java=\" cloudProvider \"\u003e cloudProvider \u003c/span\u003eis 'gcp'.\n"
+                        "description": "The GCP project ID. Required when region is 'gcp'.\n"
                     },
                     "region": {
                         "type": "string",
-                        "description": "The region of the connection. Example: 'aws-us-west-2'.\n"
+                        "description": "The region of the connection. Example: 'aws-us-west-2', 'gcp-us-central1', 'azure-centralus'.\n"
                     },
                     "timeouts": {
                         "$ref": "#/types/temporalcloud:index/ConnectivityRuleTimeouts:ConnectivityRuleTimeouts"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "temporalcloud:index/customRole:CustomRole": {
+            "description": "Provisions a Temporal Cloud custom role.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as temporalcloud from \"@pulumi/temporalcloud\";\n\nconst exampleCustomRole = new temporalcloud.CustomRole(\"example_custom_role\", {\n    name: \"terraform-example-custom-role\",\n    description: \"Example custom role created with Terraform.\",\n    permissions: [{\n        actions: [\"cloud.account.get\"],\n        resources: {\n            resourceType: \"accounts\",\n            resourceIds: [],\n            allowAll: true,\n        },\n    }],\n});\n```\n```python\nimport pulumi\nimport pulumi_temporalcloud as temporalcloud\n\nexample_custom_role = temporalcloud.CustomRole(\"example_custom_role\",\n    name=\"terraform-example-custom-role\",\n    description=\"Example custom role created with Terraform.\",\n    permissions=[{\n        \"actions\": [\"cloud.account.get\"],\n        \"resources\": {\n            \"resource_type\": \"accounts\",\n            \"resource_ids\": [],\n            \"allow_all\": True,\n        },\n    }])\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Temporalcloud = Pulumi.Temporalcloud;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var exampleCustomRole = new Temporalcloud.CustomRole(\"example_custom_role\", new()\n    {\n        Name = \"terraform-example-custom-role\",\n        Description = \"Example custom role created with Terraform.\",\n        Permissions = new[]\n        {\n            new Temporalcloud.Inputs.CustomRolePermissionArgs\n            {\n                Actions = new[]\n                {\n                    \"cloud.account.get\",\n                },\n                Resources = new Temporalcloud.Inputs.CustomRolePermissionResourcesArgs\n                {\n                    ResourceType = \"accounts\",\n                    ResourceIds = new() { },\n                    AllowAll = true,\n                },\n            },\n        },\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi-terraform-provider/sdks/go/temporalcloud/temporalcloud\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := temporalcloud.NewCustomRole(ctx, \"example_custom_role\", \u0026temporalcloud.CustomRoleArgs{\n\t\t\tName:        pulumi.String(\"terraform-example-custom-role\"),\n\t\t\tDescription: pulumi.String(\"Example custom role created with Terraform.\"),\n\t\t\tPermissions: temporalcloud.CustomRolePermissionArray{\n\t\t\t\t\u0026temporalcloud.CustomRolePermissionArgs{\n\t\t\t\t\tActions: pulumi.StringArray{\n\t\t\t\t\t\tpulumi.String(\"cloud.account.get\"),\n\t\t\t\t\t},\n\t\t\t\t\tResources: \u0026temporalcloud.CustomRolePermissionResourcesArgs{\n\t\t\t\t\t\tResourceType: pulumi.String(\"accounts\"),\n\t\t\t\t\t\tResourceIds:  pulumi.StringArray{},\n\t\t\t\t\t\tAllowAll:     pulumi.Bool(true),\n\t\t\t\t\t},\n\t\t\t\t},\n\t\t\t},\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.temporalcloud.CustomRole;\nimport com.pulumi.temporalcloud.CustomRoleArgs;\nimport com.pulumi.temporalcloud.inputs.CustomRolePermissionArgs;\nimport com.pulumi.temporalcloud.inputs.CustomRolePermissionResourcesArgs;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var exampleCustomRole = new CustomRole(\"exampleCustomRole\", CustomRoleArgs.builder()\n            .name(\"terraform-example-custom-role\")\n            .description(\"Example custom role created with Terraform.\")\n            .permissions(CustomRolePermissionArgs.builder()\n                .actions(\"cloud.account.get\")\n                .resources(CustomRolePermissionResourcesArgs.builder()\n                    .resourceType(\"accounts\")\n                    .resourceIds()\n                    .allowAll(true)\n                    .build())\n                .build())\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  exampleCustomRole:\n    type: temporalcloud:CustomRole\n    name: example_custom_role\n    properties:\n      name: terraform-example-custom-role\n      description: Example custom role created with Terraform.\n      permissions:\n        - actions:\n            - cloud.account.get\n          resources:\n            resourceType: accounts\n            resourceIds: []\n            allowAll: true\n```\n\u003c!--End PulumiCodeChooser --\u003e\n",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "The description of the custom role.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the custom role.\n"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/temporalcloud:index/CustomRolePermission:CustomRolePermission"
+                    },
+                    "description": "The permissions assigned to the custom role.\n"
+                },
+                "state": {
+                    "type": "string",
+                    "description": "The current state of the custom role.\n"
+                },
+                "timeouts": {
+                    "$ref": "#/types/temporalcloud:index/CustomRoleTimeouts:CustomRoleTimeouts"
+                }
+            },
+            "required": [
+                "description",
+                "name",
+                "permissions",
+                "state"
+            ],
+            "inputProperties": {
+                "description": {
+                    "type": "string",
+                    "description": "The description of the custom role.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the custom role.\n"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/temporalcloud:index/CustomRolePermission:CustomRolePermission"
+                    },
+                    "description": "The permissions assigned to the custom role.\n"
+                },
+                "timeouts": {
+                    "$ref": "#/types/temporalcloud:index/CustomRoleTimeouts:CustomRoleTimeouts"
+                }
+            },
+            "requiredInputs": [
+                "permissions"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering CustomRole resources.\n",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the custom role.\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the custom role.\n"
+                    },
+                    "permissions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/types/temporalcloud:index/CustomRolePermission:CustomRolePermission"
+                        },
+                        "description": "The permissions assigned to the custom role.\n"
+                    },
+                    "state": {
+                        "type": "string",
+                        "description": "The current state of the custom role.\n"
+                    },
+                    "timeouts": {
+                        "$ref": "#/types/temporalcloud:index/CustomRoleTimeouts:CustomRoleTimeouts"
                     }
                 },
                 "type": "object"
@@ -1853,7 +2161,14 @@
             "properties": {
                 "accountAccess": {
                     "type": "string",
-                    "description": "The role on the account. Must be one of owner, admin, developer, none, or read (case-insensitive). owner is only valid for import and cannot be created, updated or deleted without Temporal support. none is only valid for users managed via SCIM that derive their roles from group memberships or for group access resources.\n"
+                    "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e (case-insensitive). \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e is only valid for import and cannot be created, updated or deleted without Temporal support.\n"
+                },
+                "accountAccessCustomRoles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.\n"
                 },
                 "groupAccessId": {
                     "type": "string",
@@ -1874,7 +2189,14 @@
             "inputProperties": {
                 "accountAccess": {
                     "type": "string",
-                    "description": "The role on the account. Must be one of owner, admin, developer, none, or read (case-insensitive). owner is only valid for import and cannot be created, updated or deleted without Temporal support. none is only valid for users managed via SCIM that derive their roles from group memberships or for group access resources.\n"
+                    "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e (case-insensitive). \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e is only valid for import and cannot be created, updated or deleted without Temporal support.\n"
+                },
+                "accountAccessCustomRoles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.\n"
                 },
                 "groupAccessId": {
                     "type": "string",
@@ -1897,7 +2219,14 @@
                 "properties": {
                     "accountAccess": {
                         "type": "string",
-                        "description": "The role on the account. Must be one of owner, admin, developer, none, or read (case-insensitive). owner is only valid for import and cannot be created, updated or deleted without Temporal support. none is only valid for users managed via SCIM that derive their roles from group memberships or for group access resources.\n"
+                        "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e (case-insensitive). \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e is only valid for import and cannot be created, updated or deleted without Temporal support.\n"
+                    },
+                    "accountAccessCustomRoles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.\n"
                     },
                     "groupAccessId": {
                         "type": "string",
@@ -1978,7 +2307,7 @@
             }
         },
         "temporalcloud:index/metricsEndpoint:MetricsEndpoint": {
-            "description": "Configures a Temporal Cloud account's metrics\n\n## Import\n\nThe `pulumi import` command can be used, for example:\n\n```sh\n$ pulumi import temporalcloud:index/metricsEndpoint:MetricsEndpoint terraform terraform.account-11111-metrics\n```\n\n",
+            "description": "Configures a Temporal Cloud account's metrics endpoint for the PromQL query API.\n\n!\u003e **Deprecated.** The PromQL metrics endpoint was deprecated on April 2, 2026 and is no longer accepting new users. It will be disabled on October 5, 2026. Migrate to the [OpenMetrics endpoint](https://docs.temporal.io/cloud/metrics/openmetrics/migration-guide) instead. See the \u003cspan pulumi-lang-nodejs=\"`temporalcloud.ServiceAccount`\" pulumi-lang-dotnet=\"`temporalcloud.ServiceAccount`\" pulumi-lang-go=\"`ServiceAccount`\" pulumi-lang-python=\"`ServiceAccount`\" pulumi-lang-yaml=\"`temporalcloud.ServiceAccount`\" pulumi-lang-java=\"`temporalcloud.ServiceAccount`\"\u003e`temporalcloud.ServiceAccount`\u003c/span\u003e resource for an example of setting up OpenMetrics with Terraform.\n\n## Import\n\nThe `pulumi import` command can be used, for example:\n\n```sh\n$ pulumi import temporalcloud:index/metricsEndpoint:MetricsEndpoint terraform terraform.account-11111-metrics\n```\n\n",
             "properties": {
                 "acceptedClientCa": {
                     "type": "string",
@@ -2059,9 +2388,17 @@
                     },
                     "description": "The IDs of the connectivity rules for this namespace.\n"
                 },
+                "description": {
+                    "type": "string",
+                    "description": "The description of the namespace. Optional. Must be at most 255 printable ASCII characters plus whitespace. An empty string clears the description.\n"
+                },
                 "endpoints": {
                     "$ref": "#/types/temporalcloud:index/NamespaceEndpoints:NamespaceEndpoints",
                     "description": "The endpoints for the namespace.\n"
+                },
+                "fairness": {
+                    "$ref": "#/types/temporalcloud:index/NamespaceFairness:NamespaceFairness",
+                    "description": "The fairness configuration for the namespace.\n"
                 },
                 "name": {
                     "type": "string",
@@ -2088,6 +2425,7 @@
             },
             "required": [
                 "apiKeyAuth",
+                "description",
                 "endpoints",
                 "name",
                 "regions",
@@ -2123,6 +2461,14 @@
                         "type": "string"
                     },
                     "description": "The IDs of the connectivity rules for this namespace.\n"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "The description of the namespace. Optional. Must be at most 255 printable ASCII characters plus whitespace. An empty string clears the description.\n"
+                },
+                "fairness": {
+                    "$ref": "#/types/temporalcloud:index/NamespaceFairness:NamespaceFairness",
+                    "description": "The fairness configuration for the namespace.\n"
                 },
                 "name": {
                     "type": "string",
@@ -2184,9 +2530,17 @@
                         },
                         "description": "The IDs of the connectivity rules for this namespace.\n"
                     },
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the namespace. Optional. Must be at most 255 printable ASCII characters plus whitespace. An empty string clears the description.\n"
+                    },
                     "endpoints": {
                         "$ref": "#/types/temporalcloud:index/NamespaceEndpoints:NamespaceEndpoints",
                         "description": "The endpoints for the namespace.\n"
+                    },
+                    "fairness": {
+                        "$ref": "#/types/temporalcloud:index/NamespaceFairness:NamespaceFairness",
+                        "description": "The fairness configuration for the namespace.\n"
                     },
                     "name": {
                         "type": "string",
@@ -2217,6 +2571,10 @@
         "temporalcloud:index/namespaceExportSink:NamespaceExportSink": {
             "description": "Provisions a namespace export sink.\n",
             "properties": {
+                "azureBlob": {
+                    "$ref": "#/types/temporalcloud:index/NamespaceExportSinkAzureBlob:NamespaceExportSinkAzureBlob",
+                    "description": "The Azure Blob configuration details when destination*type is Azure Blob.\n"
+                },
                 "enabled": {
                     "type": "boolean",
                     "description": "A flag indicating whether the export sink is enabled or not.\n"
@@ -2247,6 +2605,10 @@
                 "sinkName"
             ],
             "inputProperties": {
+                "azureBlob": {
+                    "$ref": "#/types/temporalcloud:index/NamespaceExportSinkAzureBlob:NamespaceExportSinkAzureBlob",
+                    "description": "The Azure Blob configuration details when destination*type is Azure Blob.\n"
+                },
                 "enabled": {
                     "type": "boolean",
                     "description": "A flag indicating whether the export sink is enabled or not.\n"
@@ -2278,6 +2640,10 @@
             "stateInputs": {
                 "description": "Input properties used for looking up and filtering NamespaceExportSink resources.\n",
                 "properties": {
+                    "azureBlob": {
+                        "$ref": "#/types/temporalcloud:index/NamespaceExportSinkAzureBlob:NamespaceExportSinkAzureBlob",
+                        "description": "The Azure Blob configuration details when destination*type is Azure Blob.\n"
+                    },
                     "enabled": {
                         "type": "boolean",
                         "description": "A flag indicating whether the export sink is enabled or not.\n"
@@ -2517,12 +2883,93 @@
                 "type": "object"
             }
         },
+        "temporalcloud:index/project:Project": {
+            "description": "Provisions a Temporal Cloud Project. Projects are an upcoming feature and may not be enabled for your account; contact Temporal support to request access.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as temporalcloud from \"@pulumi/temporalcloud\";\n\nconst payments = new temporalcloud.Project(\"payments\", {\n    displayName: \"payments\",\n    description: \"Namespaces and resources owned by the Payments team.\",\n    projectLifecycle: {\n        enableDeleteProtection: false,\n    },\n});\n```\n```python\nimport pulumi\nimport pulumi_temporalcloud as temporalcloud\n\npayments = temporalcloud.Project(\"payments\",\n    display_name=\"payments\",\n    description=\"Namespaces and resources owned by the Payments team.\",\n    project_lifecycle={\n        \"enable_delete_protection\": False,\n    })\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Temporalcloud = Pulumi.Temporalcloud;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var payments = new Temporalcloud.Project(\"payments\", new()\n    {\n        DisplayName = \"payments\",\n        Description = \"Namespaces and resources owned by the Payments team.\",\n        ProjectLifecycle = new Temporalcloud.Inputs.ProjectProjectLifecycleArgs\n        {\n            EnableDeleteProtection = false,\n        },\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi-terraform-provider/sdks/go/temporalcloud/temporalcloud\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := temporalcloud.NewProject(ctx, \"payments\", \u0026temporalcloud.ProjectArgs{\n\t\t\tDisplayName: pulumi.String(\"payments\"),\n\t\t\tDescription: pulumi.String(\"Namespaces and resources owned by the Payments team.\"),\n\t\t\tProjectLifecycle: \u0026temporalcloud.ProjectProjectLifecycleArgs{\n\t\t\t\tEnableDeleteProtection: pulumi.Bool(false),\n\t\t\t},\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.temporalcloud.Project;\nimport com.pulumi.temporalcloud.ProjectArgs;\nimport com.pulumi.temporalcloud.inputs.ProjectProjectLifecycleArgs;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var payments = new Project(\"payments\", ProjectArgs.builder()\n            .displayName(\"payments\")\n            .description(\"Namespaces and resources owned by the Payments team.\")\n            .projectLifecycle(ProjectProjectLifecycleArgs.builder()\n                .enableDeleteProtection(false)\n                .build())\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  payments:\n    type: temporalcloud:Project\n    properties:\n      displayName: payments\n      description: Namespaces and resources owned by the Payments team.\n      projectLifecycle:\n        enableDeleteProtection: false\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\nThe `pulumi import` command can be used, for example:\n\nProjects can be imported to incorporate existing Projects into your Terraform pipeline.\nTo import a Project, you need\n- a resource configuration in your Terraform configuration file/module to accept the imported Project. In the example below, the placeholder is \u003cspan pulumi-lang-nodejs=\"\"temporalcloud.Project\"\" pulumi-lang-dotnet=\"\"temporalcloud.Project\"\" pulumi-lang-go=\"\"Project\"\" pulumi-lang-python=\"\"Project\"\" pulumi-lang-yaml=\"\"temporalcloud.Project\"\" pulumi-lang-java=\"\"temporalcloud.Project\"\"\u003e\"temporalcloud.Project\"\u003c/span\u003e \"projectimport\"\n- the Project's ID. In the example below, this is 8d1e3f2b0c9a4d5e8f7a6b5c4d3e2f10\n\n```sh\n$ pulumi import temporalcloud:index/project:Project projectimport 8d1e3f2b0c9a4d5e8f7a6b5c4d3e2f10\n```\n\n",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "The description of the Project.\n"
+                },
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name of the Project.\n"
+                },
+                "projectLifecycle": {
+                    "$ref": "#/types/temporalcloud:index/ProjectProjectLifecycle:ProjectProjectLifecycle",
+                    "description": "The lifecycle configuration for the Project. Note that this is different from the Terraform resource lifecycle. This controls settings like delete protection within Temporal Cloud.\n"
+                },
+                "state": {
+                    "type": "string",
+                    "description": "The current state of the Project.\n"
+                },
+                "timeouts": {
+                    "$ref": "#/types/temporalcloud:index/ProjectTimeouts:ProjectTimeouts"
+                }
+            },
+            "required": [
+                "description",
+                "displayName",
+                "state"
+            ],
+            "inputProperties": {
+                "description": {
+                    "type": "string",
+                    "description": "The description of the Project.\n"
+                },
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name of the Project.\n"
+                },
+                "projectLifecycle": {
+                    "$ref": "#/types/temporalcloud:index/ProjectProjectLifecycle:ProjectProjectLifecycle",
+                    "description": "The lifecycle configuration for the Project. Note that this is different from the Terraform resource lifecycle. This controls settings like delete protection within Temporal Cloud.\n"
+                },
+                "timeouts": {
+                    "$ref": "#/types/temporalcloud:index/ProjectTimeouts:ProjectTimeouts"
+                }
+            },
+            "requiredInputs": [
+                "displayName"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering Project resources.\n",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the Project.\n"
+                    },
+                    "displayName": {
+                        "type": "string",
+                        "description": "The display name of the Project.\n"
+                    },
+                    "projectLifecycle": {
+                        "$ref": "#/types/temporalcloud:index/ProjectProjectLifecycle:ProjectProjectLifecycle",
+                        "description": "The lifecycle configuration for the Project. Note that this is different from the Terraform resource lifecycle. This controls settings like delete protection within Temporal Cloud.\n"
+                    },
+                    "state": {
+                        "type": "string",
+                        "description": "The current state of the Project.\n"
+                    },
+                    "timeouts": {
+                        "$ref": "#/types/temporalcloud:index/ProjectTimeouts:ProjectTimeouts"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "temporalcloud:index/serviceAccount:ServiceAccount": {
             "description": "Provisions a Temporal Cloud Service Account.\n\n## Import\n\nThe `pulumi import` command can be used, for example:\n\nService Accounts can be imported to incorporate existing Service Accounts into your Terraform pipeline.\nTo import a Service Account, you need\n- a resource configuration in your Terraform configuration file/module to accept the imported Service Account. In the example below, the placeholder is \u003cspan pulumi-lang-nodejs=\"\"temporalcloud.ServiceAccount\"\" pulumi-lang-dotnet=\"\"temporalcloud.ServiceAccount\"\" pulumi-lang-go=\"\"ServiceAccount\"\" pulumi-lang-python=\"\"ServiceAccount\"\" pulumi-lang-yaml=\"\"temporalcloud.ServiceAccount\"\" pulumi-lang-java=\"\"temporalcloud.ServiceAccount\"\"\u003e\"temporalcloud.ServiceAccount\"\u003c/span\u003e \"saimport\"\n- the Service Accounts's ID, which is found using the Temporal Cloud CLI tcld sa l. In the example below, this is e3cb94fbdbb845f480044d053d00665b\n\n```sh\n$ pulumi import temporalcloud:index/serviceAccount:ServiceAccount saimport e3cb94fbdbb845f480044d053d00665b\n```\n\n",
             "properties": {
                 "accountAccess": {
                     "type": "string",
-                    "description": "The role on the account. Must be one of admin, developer, read, or metricsread (case-insensitive). Cannot be set if namespace*scoped*access is provided.\n"
+                    "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`metricsread`\" pulumi-lang-dotnet=\"`Metricsread`\" pulumi-lang-go=\"`metricsread`\" pulumi-lang-python=\"`metricsread`\" pulumi-lang-yaml=\"`metricsread`\" pulumi-lang-java=\"`metricsread`\"\u003e`metricsread`\u003c/span\u003e (case-insensitive). Cannot be set if namespace*scoped*access is provided.\n"
+                },
+                "accountAccessCustomRoles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead. Cannot be set if namespace*scoped*access is provided.\n"
                 },
                 "description": {
                     "type": "string",
@@ -2541,7 +2988,7 @@
                 },
                 "namespaceScopedAccess": {
                     "$ref": "#/types/temporalcloud:index/ServiceAccountNamespaceScopedAccess:ServiceAccountNamespaceScopedAccess",
-                    "description": "Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access or namespace*accesses are provided.\n"
+                    "description": "Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access, account*access*custom*roles, or namespace*accesses are provided.\n"
                 },
                 "state": {
                     "type": "string",
@@ -2559,7 +3006,14 @@
             "inputProperties": {
                 "accountAccess": {
                     "type": "string",
-                    "description": "The role on the account. Must be one of admin, developer, read, or metricsread (case-insensitive). Cannot be set if namespace*scoped*access is provided.\n"
+                    "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`metricsread`\" pulumi-lang-dotnet=\"`Metricsread`\" pulumi-lang-go=\"`metricsread`\" pulumi-lang-python=\"`metricsread`\" pulumi-lang-yaml=\"`metricsread`\" pulumi-lang-java=\"`metricsread`\"\u003e`metricsread`\u003c/span\u003e (case-insensitive). Cannot be set if namespace*scoped*access is provided.\n"
+                },
+                "accountAccessCustomRoles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead. Cannot be set if namespace*scoped*access is provided.\n"
                 },
                 "description": {
                     "type": "string",
@@ -2578,7 +3032,7 @@
                 },
                 "namespaceScopedAccess": {
                     "$ref": "#/types/temporalcloud:index/ServiceAccountNamespaceScopedAccess:ServiceAccountNamespaceScopedAccess",
-                    "description": "Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access or namespace*accesses are provided.\n"
+                    "description": "Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access, account*access*custom*roles, or namespace*accesses are provided.\n"
                 },
                 "timeouts": {
                     "$ref": "#/types/temporalcloud:index/ServiceAccountTimeouts:ServiceAccountTimeouts"
@@ -2589,7 +3043,14 @@
                 "properties": {
                     "accountAccess": {
                         "type": "string",
-                        "description": "The role on the account. Must be one of admin, developer, read, or metricsread (case-insensitive). Cannot be set if namespace*scoped*access is provided.\n"
+                        "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`metricsread`\" pulumi-lang-dotnet=\"`Metricsread`\" pulumi-lang-go=\"`metricsread`\" pulumi-lang-python=\"`metricsread`\" pulumi-lang-yaml=\"`metricsread`\" pulumi-lang-java=\"`metricsread`\"\u003e`metricsread`\u003c/span\u003e (case-insensitive). Cannot be set if namespace*scoped*access is provided.\n"
+                    },
+                    "accountAccessCustomRoles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead. Cannot be set if namespace*scoped*access is provided.\n"
                     },
                     "description": {
                         "type": "string",
@@ -2608,7 +3069,7 @@
                     },
                     "namespaceScopedAccess": {
                         "$ref": "#/types/temporalcloud:index/ServiceAccountNamespaceScopedAccess:ServiceAccountNamespaceScopedAccess",
-                        "description": "Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access or namespace*accesses are provided.\n"
+                        "description": "Configures this service account as a namespace-scoped service account with access to only a single namespace. The namespace assignment is immutable after creation. Cannot be set if account*access, account*access*custom*roles, or namespace*accesses are provided.\n"
                     },
                     "state": {
                         "type": "string",
@@ -2626,7 +3087,14 @@
             "properties": {
                 "accountAccess": {
                     "type": "string",
-                    "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`metricsread`\" pulumi-lang-dotnet=\"`Metricsread`\" pulumi-lang-go=\"`metricsread`\" pulumi-lang-python=\"`metricsread`\" pulumi-lang-yaml=\"`metricsread`\" pulumi-lang-java=\"`metricsread`\"\u003e`metricsread`\u003c/span\u003e (case-insensitive). \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e is only valid for import and cannot be created, updated or deleted without Temporal support. \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e is only valid for users managed via SCIM that derive their roles from group memberships.\n"
+                    "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e (case-insensitive). \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e is only valid for import and cannot be created, updated or deleted without Temporal support. Users can only be set to \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e when they are managed by SCIM and derive their roles from group memberships.\n"
+                },
+                "accountAccessCustomRoles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.\n"
                 },
                 "email": {
                     "type": "string",
@@ -2655,7 +3123,14 @@
             "inputProperties": {
                 "accountAccess": {
                     "type": "string",
-                    "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`metricsread`\" pulumi-lang-dotnet=\"`Metricsread`\" pulumi-lang-go=\"`metricsread`\" pulumi-lang-python=\"`metricsread`\" pulumi-lang-yaml=\"`metricsread`\" pulumi-lang-java=\"`metricsread`\"\u003e`metricsread`\u003c/span\u003e (case-insensitive). \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e is only valid for import and cannot be created, updated or deleted without Temporal support. \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e is only valid for users managed via SCIM that derive their roles from group memberships.\n"
+                    "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e (case-insensitive). \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e is only valid for import and cannot be created, updated or deleted without Temporal support. Users can only be set to \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e when they are managed by SCIM and derive their roles from group memberships.\n"
+                },
+                "accountAccessCustomRoles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.\n"
                 },
                 "email": {
                     "type": "string",
@@ -2681,7 +3156,14 @@
                 "properties": {
                     "accountAccess": {
                         "type": "string",
-                        "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`metricsread`\" pulumi-lang-dotnet=\"`Metricsread`\" pulumi-lang-go=\"`metricsread`\" pulumi-lang-python=\"`metricsread`\" pulumi-lang-yaml=\"`metricsread`\" pulumi-lang-java=\"`metricsread`\"\u003e`metricsread`\u003c/span\u003e (case-insensitive). \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e is only valid for import and cannot be created, updated or deleted without Temporal support. \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e is only valid for users managed via SCIM that derive their roles from group memberships.\n"
+                        "description": "The role on the account. Must be one of \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`admin`\" pulumi-lang-dotnet=\"`Admin`\" pulumi-lang-go=\"`admin`\" pulumi-lang-python=\"`admin`\" pulumi-lang-yaml=\"`admin`\" pulumi-lang-java=\"`admin`\"\u003e`admin`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`developer`\" pulumi-lang-dotnet=\"`Developer`\" pulumi-lang-go=\"`developer`\" pulumi-lang-python=\"`developer`\" pulumi-lang-yaml=\"`developer`\" pulumi-lang-java=\"`developer`\"\u003e`developer`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`read`\" pulumi-lang-dotnet=\"`Read`\" pulumi-lang-go=\"`read`\" pulumi-lang-python=\"`read`\" pulumi-lang-yaml=\"`read`\" pulumi-lang-java=\"`read`\"\u003e`read`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`financeadmin`\" pulumi-lang-dotnet=\"`Financeadmin`\" pulumi-lang-go=\"`financeadmin`\" pulumi-lang-python=\"`financeadmin`\" pulumi-lang-yaml=\"`financeadmin`\" pulumi-lang-java=\"`financeadmin`\"\u003e`financeadmin`\u003c/span\u003e, or \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e (case-insensitive). \u003cspan pulumi-lang-nodejs=\"`owner`\" pulumi-lang-dotnet=\"`Owner`\" pulumi-lang-go=\"`owner`\" pulumi-lang-python=\"`owner`\" pulumi-lang-yaml=\"`owner`\" pulumi-lang-java=\"`owner`\"\u003e`owner`\u003c/span\u003e is only valid for import and cannot be created, updated or deleted without Temporal support. Users can only be set to \u003cspan pulumi-lang-nodejs=\"`none`\" pulumi-lang-dotnet=\"`None`\" pulumi-lang-go=\"`none`\" pulumi-lang-python=\"`none`\" pulumi-lang-yaml=\"`none`\" pulumi-lang-java=\"`none`\"\u003e`none`\u003c/span\u003e when they are managed by SCIM and derive their roles from group memberships.\n"
+                    },
+                    "accountAccessCustomRoles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.\n"
                     },
                     "email": {
                         "type": "string",
@@ -2808,6 +3290,10 @@
             "outputs": {
                 "description": "A collection of values returned by getConnectivityRule.\n",
                 "properties": {
+                    "azurePeResourceId": {
+                        "description": "The ARM resource ID of the customer's Azure Private Endpoint for the connectivity rule.\n",
+                        "type": "string"
+                    },
                     "connectionId": {
                         "description": "The ID of the connection to the connectivity rule.\n",
                         "type": "string"
@@ -2819,6 +3305,10 @@
                     "createdAt": {
                         "description": "The time the connectivity rule was created.\n",
                         "type": "string"
+                    },
+                    "enableStableIps": {
+                        "description": "If true, namespaces attached to this public connectivity rule are reachable via a predictable set of public IPs. Only set for public connectivity rules.\n",
+                        "type": "boolean"
                     },
                     "gcpProjectId": {
                         "description": "The GCP project ID of the connectivity rule.\n",
@@ -2838,9 +3328,11 @@
                     }
                 },
                 "required": [
+                    "azurePeResourceId",
                     "connectionId",
                     "connectivityType",
                     "createdAt",
+                    "enableStableIps",
                     "gcpProjectId",
                     "id",
                     "region",
@@ -2955,6 +3447,10 @@
                         "description": "The custom search attributes to use for the namespace.\n",
                         "type": "object"
                     },
+                    "description": {
+                        "description": "The description of the namespace, if set.\n",
+                        "type": "string"
+                    },
                     "endpoints": {
                         "$ref": "#/types/temporalcloud:index/getNamespaceEndpoints:getNamespaceEndpoints",
                         "description": "The endpoints for the namespace.\n"
@@ -3017,6 +3513,7 @@
                     "connectivityRuleIds",
                     "createdTime",
                     "customSearchAttributes",
+                    "description",
                     "endpoints",
                     "id",
                     "lastModifiedTime",
@@ -3243,6 +3740,13 @@
                         "description": "The role on the account. Must be one of admin, developer, read, or metricsread (case-insensitive).\n",
                         "type": "string"
                     },
+                    "accountAccessCustomRoles": {
+                        "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.\n",
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
                     "createdAt": {
                         "description": "The creation time of the Service Account.\n",
                         "type": "string"
@@ -3281,6 +3785,7 @@
                 },
                 "required": [
                     "accountAccess",
+                    "accountAccessCustomRoles",
                     "createdAt",
                     "description",
                     "id",
@@ -3346,6 +3851,13 @@
                         "description": "The role on the account. Must be one of admin, developer, or read (case-insensitive).\n",
                         "type": "string"
                     },
+                    "accountAccessCustomRoles": {
+                        "description": "The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.\n",
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
                     "createdAt": {
                         "description": "The creation time of the User.\n",
                         "type": "string"
@@ -3376,6 +3888,7 @@
                 },
                 "required": [
                     "accountAccess",
+                    "accountAccessCustomRoles",
                     "createdAt",
                     "email",
                     "id",

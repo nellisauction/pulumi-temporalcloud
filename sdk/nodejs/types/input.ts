@@ -15,7 +15,7 @@ export interface AccountAuditLogSinkKinesis {
      */
     region: pulumi.Input<string>;
     /**
-     * The IAM role that Temporal Cloud assumes for writing records to the customer's Kinesis stream.
+     * The name of the IAM role that Temporal Cloud assumes for writing records to the customer's Kinesis stream.
      */
     roleName: pulumi.Input<string>;
 }
@@ -72,6 +72,47 @@ export interface ConnectivityRuleTimeouts {
     delete?: pulumi.Input<string | undefined>;
 }
 
+export interface CustomRolePermission {
+    /**
+     * The actions allowed by this permission.
+     */
+    actions: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The resources this permission applies to.
+     */
+    resources: pulumi.Input<inputs.CustomRolePermissionResources>;
+}
+
+export interface CustomRolePermissionResources {
+    /**
+     * Whether this permission applies to all resources of the given type. If true, resourceIds must be empty.
+     */
+    allowAll?: pulumi.Input<boolean | undefined>;
+    /**
+     * The resource IDs this permission applies to. If empty, allowAll must be true.
+     */
+    resourceIds: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The resource type this permission applies to. Must be one of: accounts, projects, namespaces, nexus-endpoints, connectivity-rules, custom-roles.
+     */
+    resourceType: pulumi.Input<string>;
+}
+
+export interface CustomRoleTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    create?: pulumi.Input<string | undefined>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+     */
+    delete?: pulumi.Input<string | undefined>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    update?: pulumi.Input<string | undefined>;
+}
+
 export interface GetNamespaceCertificateFilter {
     /**
      * The certificate's common name.
@@ -112,6 +153,14 @@ export interface GetNamespaceCertificateFilterArgs {
 
 export interface GetNamespaceCodecServer {
     /**
+     * A link displayed alongside the custom error message for the codec server.
+     */
+    customErrorLink?: string;
+    /**
+     * A custom error message to display when the codec server returns an error.
+     */
+    customErrorMessage?: string;
+    /**
      * The endpoint of the codec server.
      */
     endpoint?: string;
@@ -126,6 +175,14 @@ export interface GetNamespaceCodecServer {
 }
 
 export interface GetNamespaceCodecServerArgs {
+    /**
+     * A link displayed alongside the custom error message for the codec server.
+     */
+    customErrorLink?: pulumi.Input<string | undefined>;
+    /**
+     * A custom error message to display when the codec server returns an error.
+     */
+    customErrorMessage?: pulumi.Input<string | undefined>;
     /**
      * The endpoint of the codec server.
      */
@@ -308,6 +365,14 @@ export interface NamespaceCertificateFilter {
 
 export interface NamespaceCodecServer {
     /**
+     * A link displayed alongside the custom error message for the codec server.
+     */
+    customErrorLink?: pulumi.Input<string | undefined>;
+    /**
+     * A custom error message to display when the codec server returns an error.
+     */
+    customErrorMessage?: pulumi.Input<string | undefined>;
+    /**
      * The endpoint of the codec server. Must begin with "https".
      */
     endpoint: pulumi.Input<string>;
@@ -334,6 +399,33 @@ export interface NamespaceEndpoints {
      * The address in the Temporal Cloud Web UI for the namespace
      */
     webAddress?: pulumi.Input<string | undefined>;
+}
+
+export interface NamespaceExportSinkAzureBlob {
+    /**
+     * The name of the destination Azure Blob container where Temporal will send data.
+     */
+    containerName: pulumi.Input<string>;
+    /**
+     * The region where the Azure storage account is located.
+     */
+    region: pulumi.Input<string>;
+    /**
+     * The Azure resource group that contains the storage account.
+     */
+    resourceGroup: pulumi.Input<string>;
+    /**
+     * The name of the destination Azure storage account where Temporal will send data.
+     */
+    storageAccount: pulumi.Input<string>;
+    /**
+     * The Azure subscription ID that contains the storage account.
+     */
+    subscriptionId: pulumi.Input<string>;
+    /**
+     * The customer's Azure tenant ID where the storage account exists and where Temporal's app registration is consented/granted access.
+     */
+    tenantId: pulumi.Input<string>;
 }
 
 export interface NamespaceExportSinkGcs {
@@ -393,6 +485,13 @@ export interface NamespaceExportSinkTimeouts {
     delete?: pulumi.Input<string | undefined>;
 }
 
+export interface NamespaceFairness {
+    /**
+     * Flag to enable task queue fairness for the namespace. Defaults to disabled.
+     */
+    taskQueueFairnessEnabled?: pulumi.Input<boolean | undefined>;
+}
+
 export interface NamespaceNamespaceLifecycle {
     /**
      * If true, the namespace cannot be deleted. This is a safeguard against accidental deletion. To delete a namespace with this option enabled, you must first set it to false.
@@ -442,6 +541,28 @@ export interface NexusEndpointWorkerTarget {
      * The task queue on the cloud namespace to route requests to.
      */
     taskQueue: pulumi.Input<string>;
+}
+
+export interface ProjectProjectLifecycle {
+    /**
+     * If true, the Project cannot be deleted. This is a safeguard against accidental deletion. To delete a Project with this option enabled, you must first set it to false.
+     */
+    enableDeleteProtection?: pulumi.Input<boolean | undefined>;
+}
+
+export interface ProjectTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    create?: pulumi.Input<string | undefined>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+     */
+    delete?: pulumi.Input<string | undefined>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    update?: pulumi.Input<string | undefined>;
 }
 
 export interface ServiceAccountNamespaceAccess {

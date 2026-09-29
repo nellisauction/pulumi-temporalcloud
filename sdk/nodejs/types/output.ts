@@ -15,7 +15,7 @@ export interface AccountAuditLogSinkKinesis {
      */
     region: string;
     /**
-     * The IAM role that Temporal Cloud assumes for writing records to the customer's Kinesis stream.
+     * The name of the IAM role that Temporal Cloud assumes for writing records to the customer's Kinesis stream.
      */
     roleName: string;
 }
@@ -72,6 +72,47 @@ export interface ConnectivityRuleTimeouts {
     delete?: string;
 }
 
+export interface CustomRolePermission {
+    /**
+     * The actions allowed by this permission.
+     */
+    actions: string[];
+    /**
+     * The resources this permission applies to.
+     */
+    resources: outputs.CustomRolePermissionResources;
+}
+
+export interface CustomRolePermissionResources {
+    /**
+     * Whether this permission applies to all resources of the given type. If true, resourceIds must be empty.
+     */
+    allowAll: boolean;
+    /**
+     * The resource IDs this permission applies to. If empty, allowAll must be true.
+     */
+    resourceIds: string[];
+    /**
+     * The resource type this permission applies to. Must be one of: accounts, projects, namespaces, nexus-endpoints, connectivity-rules, custom-roles.
+     */
+    resourceType: string;
+}
+
+export interface CustomRoleTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    create?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+     */
+    delete?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    update?: string;
+}
+
 export interface GetAccountAuditLogSinkKinesis {
     /**
      * The destination URI of the Kinesis stream where Temporal will send data.
@@ -82,7 +123,7 @@ export interface GetAccountAuditLogSinkKinesis {
      */
     region: string;
     /**
-     * The IAM role that Temporal Cloud assumes for writing records to the customer's Kinesis stream.
+     * The name of the IAM role that Temporal Cloud assumes for writing records to the customer's Kinesis stream.
      */
     roleName: string;
 }
@@ -126,6 +167,14 @@ export interface GetNamespaceCertificateFilter {
 }
 
 export interface GetNamespaceCodecServer {
+    /**
+     * A link displayed alongside the custom error message for the codec server.
+     */
+    customErrorLink: string;
+    /**
+     * A custom error message to display when the codec server returns an error.
+     */
+    customErrorMessage: string;
     /**
      * The endpoint of the codec server.
      */
@@ -221,6 +270,10 @@ export interface GetNamespacesNamespace {
      */
     customSearchAttributes: {[key: string]: string};
     /**
+     * The description of the namespace, if set.
+     */
+    description: string;
+    /**
      * The endpoints for the namespace.
      */
     endpoints: outputs.GetNamespacesNamespaceEndpoints;
@@ -286,6 +339,14 @@ export interface GetNamespacesNamespaceCertificateFilter {
 }
 
 export interface GetNamespacesNamespaceCodecServer {
+    /**
+     * A link displayed alongside the custom error message for the codec server.
+     */
+    customErrorLink: string;
+    /**
+     * A custom error message to display when the codec server returns an error.
+     */
+    customErrorMessage: string;
     /**
      * The endpoint of the codec server.
      */
@@ -451,6 +512,10 @@ export interface GetServiceAccountsServiceAccount {
      */
     accountAccess: string;
     /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.
+     */
+    accountAccessCustomRoles: string[];
+    /**
      * The creation time of the Service Account.
      */
     createdAt: string;
@@ -522,6 +587,10 @@ export interface GetUsersUser {
      * The role on the account. Must be one of admin, developer, or read (case-insensitive).
      */
     accountAccess: string;
+    /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.
+     */
+    accountAccessCustomRoles: string[];
     /**
      * The creation time of the User.
      */
@@ -639,6 +708,14 @@ export interface NamespaceCertificateFilter {
 
 export interface NamespaceCodecServer {
     /**
+     * A link displayed alongside the custom error message for the codec server.
+     */
+    customErrorLink?: string;
+    /**
+     * A custom error message to display when the codec server returns an error.
+     */
+    customErrorMessage?: string;
+    /**
      * The endpoint of the codec server. Must begin with "https".
      */
     endpoint: string;
@@ -665,6 +742,33 @@ export interface NamespaceEndpoints {
      * The address in the Temporal Cloud Web UI for the namespace
      */
     webAddress: string;
+}
+
+export interface NamespaceExportSinkAzureBlob {
+    /**
+     * The name of the destination Azure Blob container where Temporal will send data.
+     */
+    containerName: string;
+    /**
+     * The region where the Azure storage account is located.
+     */
+    region: string;
+    /**
+     * The Azure resource group that contains the storage account.
+     */
+    resourceGroup: string;
+    /**
+     * The name of the destination Azure storage account where Temporal will send data.
+     */
+    storageAccount: string;
+    /**
+     * The Azure subscription ID that contains the storage account.
+     */
+    subscriptionId: string;
+    /**
+     * The customer's Azure tenant ID where the storage account exists and where Temporal's app registration is consented/granted access.
+     */
+    tenantId: string;
 }
 
 export interface NamespaceExportSinkGcs {
@@ -724,6 +828,13 @@ export interface NamespaceExportSinkTimeouts {
     delete?: string;
 }
 
+export interface NamespaceFairness {
+    /**
+     * Flag to enable task queue fairness for the namespace. Defaults to disabled.
+     */
+    taskQueueFairnessEnabled?: boolean;
+}
+
 export interface NamespaceNamespaceLifecycle {
     /**
      * If true, the namespace cannot be deleted. This is a safeguard against accidental deletion. To delete a namespace with this option enabled, you must first set it to false.
@@ -773,6 +884,28 @@ export interface NexusEndpointWorkerTarget {
      * The task queue on the cloud namespace to route requests to.
      */
     taskQueue: string;
+}
+
+export interface ProjectProjectLifecycle {
+    /**
+     * If true, the Project cannot be deleted. This is a safeguard against accidental deletion. To delete a Project with this option enabled, you must first set it to false.
+     */
+    enableDeleteProtection: boolean;
+}
+
+export interface ProjectTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    create?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+     */
+    delete?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    update?: string;
 }
 
 export interface ServiceAccountNamespaceAccess {

@@ -63,9 +63,13 @@ export class GroupAccess extends pulumi.CustomResource {
     }
 
     /**
-     * The role on the account. Must be one of owner, admin, developer, none, or read (case-insensitive). owner is only valid for import and cannot be created, updated or deleted without Temporal support. none is only valid for users managed via SCIM that derive their roles from group memberships or for group access resources.
+     * The role on the account. Must be one of `owner`, `admin`, `developer`, `read`, `financeadmin`, or `none` (case-insensitive). `owner` is only valid for import and cannot be created, updated or deleted without Temporal support.
      */
     declare public readonly accountAccess: pulumi.Output<string>;
+    /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.
+     */
+    declare public readonly accountAccessCustomRoles: pulumi.Output<string[] | undefined>;
     /**
      * The unique identifier of the group access across all Temporal Cloud tenants.
      */
@@ -89,6 +93,7 @@ export class GroupAccess extends pulumi.CustomResource {
         if (opts.id) {
             const state = argsOrState as GroupAccessState | undefined;
             resourceInputs["accountAccess"] = state?.accountAccess;
+            resourceInputs["accountAccessCustomRoles"] = state?.accountAccessCustomRoles;
             resourceInputs["groupAccessId"] = state?.groupAccessId;
             resourceInputs["namespaceAccesses"] = state?.namespaceAccesses;
         } else {
@@ -100,6 +105,7 @@ export class GroupAccess extends pulumi.CustomResource {
                 throw new Error("Missing required property 'groupAccessId'");
             }
             resourceInputs["accountAccess"] = args?.accountAccess;
+            resourceInputs["accountAccessCustomRoles"] = args?.accountAccessCustomRoles;
             resourceInputs["groupAccessId"] = args?.groupAccessId;
             resourceInputs["namespaceAccesses"] = args?.namespaceAccesses;
         }
@@ -113,9 +119,13 @@ export class GroupAccess extends pulumi.CustomResource {
  */
 export interface GroupAccessState {
     /**
-     * The role on the account. Must be one of owner, admin, developer, none, or read (case-insensitive). owner is only valid for import and cannot be created, updated or deleted without Temporal support. none is only valid for users managed via SCIM that derive their roles from group memberships or for group access resources.
+     * The role on the account. Must be one of `owner`, `admin`, `developer`, `read`, `financeadmin`, or `none` (case-insensitive). `owner` is only valid for import and cannot be created, updated or deleted without Temporal support.
      */
     accountAccess?: pulumi.Input<string | undefined>;
+    /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.
+     */
+    accountAccessCustomRoles?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * The unique identifier of the group access across all Temporal Cloud tenants.
      */
@@ -131,9 +141,13 @@ export interface GroupAccessState {
  */
 export interface GroupAccessArgs {
     /**
-     * The role on the account. Must be one of owner, admin, developer, none, or read (case-insensitive). owner is only valid for import and cannot be created, updated or deleted without Temporal support. none is only valid for users managed via SCIM that derive their roles from group memberships or for group access resources.
+     * The role on the account. Must be one of `owner`, `admin`, `developer`, `read`, `financeadmin`, or `none` (case-insensitive). `owner` is only valid for import and cannot be created, updated or deleted without Temporal support.
      */
     accountAccess: pulumi.Input<string>;
+    /**
+     * The set of custom role IDs assigned within account*access in addition to the built-in account*access role. Empty sets are not allowed, omit the attribute instead.
+     */
+    accountAccessCustomRoles?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * The unique identifier of the group access across all Temporal Cloud tenants.
      */
