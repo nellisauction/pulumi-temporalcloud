@@ -284,5 +284,35 @@
             }
         }
     },
-    "auto-settings": {}
+    "auto-settings": {},
+    "default-resource-schema-fixups": {
+        "resources": {
+            "temporalcloud_account_audit_log_sink": {},
+            "temporalcloud_apikey": {},
+            "temporalcloud_connectivity_rule": {},
+            "temporalcloud_custom_role": {},
+            "temporalcloud_group": {},
+            "temporalcloud_group_access": {
+                "fields": {
+                    "id": {
+                        "name": "groupAccessId"
+                    }
+                },
+                "computeID": {
+                    "kind": "delegate",
+                    "field": "groupAccessId"
+                }
+            },
+            "temporalcloud_group_members": {},
+            "temporalcloud_metrics_endpoint": {},
+            "temporalcloud_namespace": {},
+            "temporalcloud_namespace_export_sink": {},
+            "temporalcloud_namespace_search_attribute": {},
+            "temporalcloud_namespace_tags": {},
+            "temporalcloud_nexus_endpoint": {},
+            "temporalcloud_project": {},
+            "temporalcloud_service_account": {},
+            "temporalcloud_user": {}
+        }
+    }
 }

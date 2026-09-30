@@ -35,10 +35,6 @@ export interface GetAccountAuditLogSinkResult {
      */
     readonly enabled: boolean;
     /**
-     * The provider-assigned unique ID for this managed resource.
-     */
-    readonly id: string;
-    /**
      * The Kinesis configuration details when destinationType is Kinesis.
      */
     readonly kinesis: outputs.GetAccountAuditLogSinkKinesis;
