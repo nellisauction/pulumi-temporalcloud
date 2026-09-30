@@ -1,6 +1,6 @@
 module github.com/temporalio/terraform-provider-temporalcloud/shim
 
-go 1.25.9
+go 1.27.1
 
 require (
 	github.com/hashicorp/terraform-plugin-framework v1.15.1
