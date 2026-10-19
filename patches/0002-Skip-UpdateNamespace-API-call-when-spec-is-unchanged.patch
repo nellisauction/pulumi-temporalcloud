@@ -1,0 +1,184 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Brian Lee <briandl92391@gmail.com>
+Date: Mon, 19 Oct 2026 13:55:23 -0700
+Subject: [PATCH] Skip UpdateNamespace API call when spec is unchanged
+
+Pulumi issues an Update when only the provider version changes, even
+though the namespace configuration is identical. The Temporal Cloud API
+rejects no-op updates, and blocks namespace updates entirely in regions
+under capacity restrictions (GCP as of 2026-10), so these no-op updates
+fail.
+
+Compare the desired spec to the current one and write state back
+without calling the API when nothing would change. GetNamespace echoes
+empty sub-messages and a replicas list mirroring regions that Update
+never sends, so both specs are normalized before comparison.
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+
+diff --git a/internal/provider/namespace_resource.go b/internal/provider/namespace_resource.go
+index a5942d4..a89ae60 100644
+--- a/internal/provider/namespace_resource.go
++++ b/internal/provider/namespace_resource.go
+@@ -36,6 +36,7 @@ import (
+ 	"google.golang.org/grpc/codes"
+ 	"google.golang.org/grpc/status"
+ 	"google.golang.org/protobuf/proto"
++	"google.golang.org/protobuf/reflect/protoreflect"
+ 
+ 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+ 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+@@ -863,6 +864,18 @@ func (r *namespaceResource) Update(ctx context.Context, req resource.UpdateReque
+ 		return
+ 	}
+ 
++	// Pulumi issues an Update when only the provider version changes. Skip the
++	// API call for no-op specs: the API rejects them, and Temporal Cloud blocks
++	// namespace updates in some regions (e.g. GCP during capacity restrictions).
++	if isNamespaceSpecUnchanged(currentNs.GetNamespace().GetSpec(), spec) {
++		resp.Diagnostics.Append(updateModelFromSpec(ctx, &plan, currentNs.Namespace)...)
++		if resp.Diagnostics.HasError() {
++			return
++		}
++		resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
++		return
++	}
++
+ 	svcResp, err := r.client.CloudService().UpdateNamespace(ctx, &cloudservicev1.UpdateNamespaceRequest{
+ 		Namespace:        plan.ID.ValueString(),
+ 		Spec:             spec,
+@@ -895,6 +908,51 @@ func (r *namespaceResource) Update(ctx context.Context, req resource.UpdateReque
+ 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
+ }
+ 
++// isNamespaceSpecUnchanged reports whether desired would change nothing on
++// current. The API echoes empty sub-messages and a replicas list mirroring
++// regions, neither of which Update sends, so both specs are normalized first.
++func isNamespaceSpecUnchanged(current, desired *namespacev1.NamespaceSpec) bool {
++	c := proto.Clone(current).(*namespacev1.NamespaceSpec)
++	d := proto.Clone(desired).(*namespacev1.NamespaceSpec)
++	//nolint:staticcheck // SA1019: Update only manages the deprecated regions field.
++	c.Replicas, c.HighAvailability = nil, nil
++	// Regions reorder on HA failover; connectivity rule IDs are a set.
++	for _, s := range []*namespacev1.NamespaceSpec{c, d} {
++		slices.Sort(s.Regions) //nolint:staticcheck // SA1019
++		slices.Sort(s.ConnectivityRuleIds)
++	}
++	pruneEmptyMessages(c.ProtoReflect())
++	pruneEmptyMessages(d.ProtoReflect())
++	return proto.Equal(c, d)
++}
++
++func pruneEmptyMessages(m protoreflect.Message) {
++	m.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
++		if fd.Kind() != protoreflect.MessageKind && fd.Kind() != protoreflect.GroupKind {
++			return true
++		}
++		switch {
++		case fd.IsList():
++			for i := 0; i < v.List().Len(); i++ {
++				pruneEmptyMessages(v.List().Get(i).Message())
++			}
++		case fd.IsMap():
++			if fd.MapValue().Message() != nil {
++				v.Map().Range(func(_ protoreflect.MapKey, mv protoreflect.Value) bool {
++					pruneEmptyMessages(mv.Message())
++					return true
++				})
++			}
++		default:
++			pruneEmptyMessages(v.Message())
++			if proto.Size(v.Message().Interface()) == 0 {
++				m.Clear(fd)
++			}
++		}
++		return true
++	})
++}
++
+ // Delete deletes the resource and removes the Terraform state on success.
+ func (r *namespaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+ 	var state namespaceResourceModel
+diff --git a/internal/provider/namespace_spec_unchanged_test.go b/internal/provider/namespace_spec_unchanged_test.go
+new file mode 100644
+index 0000000..8fff626
+--- /dev/null
++++ b/internal/provider/namespace_spec_unchanged_test.go
+@@ -0,0 +1,77 @@
++package provider
++
++import (
++	"testing"
++
++	namespacev1 "go.temporal.io/cloud-sdk/api/namespace/v1"
++)
++
++func TestIsNamespaceSpecUnchanged(t *testing.T) {
++	// Shape returned by GetNamespace for an API-key namespace with defaults.
++	current := func() *namespacev1.NamespaceSpec {
++		return &namespacev1.NamespaceSpec{
++			Name:          "ns",
++			Regions:       []string{"gcp-us-west1"},
++			RetentionDays: 90,
++			MtlsAuth:      &namespacev1.MtlsAuthSpec{},
++			ApiKeyAuth:    &namespacev1.ApiKeyAuthSpec{Enabled: true},
++			CodecServer: &namespacev1.CodecServerSpec{
++				CustomErrorMessage: &namespacev1.CodecServerSpec_CustomErrorMessage{
++					Default: &namespacev1.CodecServerSpec_CustomErrorMessage_ErrorMessage{},
++				},
++			},
++			Lifecycle:        &namespacev1.LifecycleSpec{},
++			HighAvailability: &namespacev1.HighAvailabilitySpec{},
++			Replicas:         []*namespacev1.ReplicaSpec{{Region: "gcp-us-west1"}},
++		}
++	}
++	desired := func() *namespacev1.NamespaceSpec {
++		return &namespacev1.NamespaceSpec{
++			Name:          "ns",
++			Regions:       []string{"gcp-us-west1"},
++			RetentionDays: 90,
++			ApiKeyAuth:    &namespacev1.ApiKeyAuthSpec{Enabled: true},
++		}
++	}
++
++	if !isNamespaceSpecUnchanged(current(), desired()) {
++		t.Error("expected server defaults to compare equal to an unchanged desired spec")
++	}
++
++	ha := current()
++	ha.Regions = []string{"aws-us-west-2", "aws-us-east-1"}
++	ha.ConnectivityRuleIds = []string{"b", "a"}
++	haDesired := desired()
++	haDesired.Regions = []string{"aws-us-east-1", "aws-us-west-2"}
++	haDesired.ConnectivityRuleIds = []string{"a", "b"}
++	if !isNamespaceSpecUnchanged(ha, haDesired) {
++		t.Error("expected reordered regions and connectivity rule IDs to compare equal")
++	}
++	if ha.Regions[0] != "aws-us-west-2" {
++		t.Error("expected input regions to be left unsorted")
++	}
++
++	retention := desired()
++	retention.RetentionDays = 30
++	if isNamespaceSpecUnchanged(current(), retention) {
++		t.Error("expected retention change to be detected")
++	}
++
++	description := desired()
++	description.Description = "changed"
++	if isNamespaceSpecUnchanged(current(), description) {
++		t.Error("expected description change to be detected")
++	}
++
++	lifecycle := desired()
++	lifecycle.Lifecycle = &namespacev1.LifecycleSpec{EnableDeleteProtection: true}
++	if isNamespaceSpecUnchanged(current(), lifecycle) {
++		t.Error("expected lifecycle change to be detected")
++	}
++
++	c := current()
++	isNamespaceSpecUnchanged(c, desired())
++	if c.Replicas == nil || c.MtlsAuth == nil {
++		t.Error("expected inputs to be left unmodified")
++	}
++}
